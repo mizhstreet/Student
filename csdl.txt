@@ -1,0 +1,25 @@
+
+create table admin (int identity primary key, username varchar(100), password text, status bit)
+
+create table Students (student_id varchar(10) primary key,fname varchar(45),lname varchar(45),dob DATE,phone varchar(15),joined_date DATE,address text)
+
+create table Semester (sem_id int identity primary key, name varchar(45))
+
+create table Subjects (subject_id int identity primary key, name varchar(45), sem_id int foreign key references Semester(sem_id), description text, status bit)
+
+create table Class (class_id int identity primary key, name varchar(6), description text, status bit)
+
+create table Class_Student (student_id varchar(10) foreign key references Students(student_id), class_id int foreign key references Class(class_id))
+	
+create table Subject_Sessions (session_id int identity primary key, subject_id int foreign key references Subjects(subject_id), name varchar(100))
+
+create table Attendance (student_id varchar(10) foreign key references Students(student_id), attendant bit, remark text, session_id int foreign key references Subject_Sessions(session_id)) 
+
+create table Exam (exam_id int identity primary key, exam_date date, name varchar(100), subject_id int foreign key references Subjects(subject_id), condition int)
+
+create table Exam_Result(exam_id int foreign key references Exam(exam_id), student_id varchar(10) foreign key references Students(student_id), mark int, remark text)
+
+insert into Semester values ('Ki I')
+insert into Semester values ('Ki II')
+insert into Semester values ('Ki III')
+insert into Semester values ('Ki IV')
