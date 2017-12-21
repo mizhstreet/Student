@@ -1,5 +1,5 @@
 
-create table admin (int identity primary key, username varchar(100), password text, status bit)
+create table admin (id int identity primary key, username varchar(100), password text, status bit)
 
 create table Students (student_id varchar(10) primary key,fname varchar(45),lname varchar(45),dob DATE,phone varchar(15),joined_date DATE,address text)
 
@@ -13,7 +13,7 @@ create table Class_Student (student_id varchar(10) foreign key references Studen
 	
 create table Subject_Sessions (session_id int identity primary key, subject_id int foreign key references Subjects(subject_id), name varchar(100))
 
-create table Attendance (student_id varchar(10) foreign key references Students(student_id), attendant bit, remark text, session_id int foreign key references Subject_Sessions(session_id)) 
+create table Attendance (student_id varchar(10) foreign key references Students(student_id), attendant bit, remark text, session_id int foreign key references Subject_Sessions(s   ession_id)) 
 
 create table Exam (exam_id int identity primary key, exam_date date, name varchar(100), subject_id int foreign key references Subjects(subject_id), condition int)
 

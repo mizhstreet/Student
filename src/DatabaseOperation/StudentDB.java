@@ -18,11 +18,15 @@ import java.util.logging.Logger;
  *
  * @author mbiuu
  */
+
 public class StudentDB {
     Connection conn;
     PreparedStatement pstmt;
     CallableStatement cstmt;
     ResultSet rs;
+    public static void main(String[] args) {
+        
+    }
     public StudentDB() {
         conn = DBUtility.openConnection();
     }
@@ -35,6 +39,7 @@ public class StudentDB {
                     + ",'" + dummyStudent.getPhone() + "'"
                     + ",'" + dummyStudent.getJoinedDate()+ "'"
                     + ",'" + dummyStudent.getAddress() + "'"
+                    + ",'" + dummyStudent.isStatus()+ "'"
                     + ")";
         try {
             pstmt = conn.prepareStatement(insertQuery);

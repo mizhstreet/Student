@@ -19,6 +19,15 @@ public class Student {
     private Date dob;
     private Date joinedDate;
     private String address;   
+    private boolean status;
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public String getStudentId() {
         return studentId;
