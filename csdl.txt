@@ -23,3 +23,8 @@ insert into Semester values ('Ki I')
 insert into Semester values ('Ki II')
 insert into Semester values ('Ki III')
 insert into Semester values ('Ki IV')
+
+-----new commit ----------
+alter table Students add status bit
+alter table Students add image varchar(100)
+
