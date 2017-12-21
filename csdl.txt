@@ -28,3 +28,6 @@ insert into Semester values ('Ki IV')
 alter table Students add status bit
 alter table Students add image varchar(100)
 
+---new commit ------
+
+alter table Exam add class_id int foreign key references Class(Class_id)
