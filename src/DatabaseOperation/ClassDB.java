@@ -8,11 +8,9 @@ package DatabaseOperation;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import Classes.Class;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,9 +24,56 @@ public class ClassDB {
     public ClassDB() {
         conn = DBUtility.openConnection();
     }
-
-    public void updateClass(Class dummyClass){
-        String command = "update Class set name ="+ dummyClass.getName() +", description = ";
+//    Test only
+//    public static void main(String[] args) {
+//        Classes.Class c = new Classes.Class();
+//        c.setDescription("Lop nay hoc Java");
+//        c.setName("C1605M");
+//        c.setStatus(true);
+//        ClassDB cdb = new ClassDB();
+//        cdb.activateClass(c);
+//    }
+    public void insertClass(Classes.Class dummyClass){
+        String insertQuery = "insert into Class"
+                    + " values('"
+                    + dummyClass.getName()
+                    + "','" + dummyClass.getDescription()+ "'"
+                    + "," + (dummyClass.isStatus() ? 1 : 0)+ ""
+                    + ")";
+        try {
+            pstmt = conn.prepareStatement(insertQuery);
+            pstmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
-    
+    public void deactivateClass(Classes.Class dummyClass){
+        String query = "Update Class set status = 0 where class_id="+"'"+dummyClass.getClassID()+"'";
+        try {           
+            pstmt = conn.prepareStatement(query);
+            pstmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void activateClass(Classes.Class dummyClass){
+        String query = "Update Class set status = 1 where class_id="+"'"+dummyClass.getClassID()+"'";
+        try {           
+            pstmt = conn.prepareStatement(query);
+            pstmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public ResultSet getAllClass(){
+        String query = "Select * from Class";
+        try {
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
 }

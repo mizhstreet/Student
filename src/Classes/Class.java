@@ -13,7 +13,8 @@ public class Class {
     private int classID;
     private String name;
     private String description;
-
+    private boolean status;
+    
     public int getClassID() {
         return classID;
     }
@@ -45,5 +46,5 @@ public class Class {
     public void setStatus(boolean status) {
         this.status = status;
     }
-    private boolean status;
+    
 }

@@ -35,20 +35,20 @@ public class StudentDB {
 //        minh.setStatus(true);
 //        minh.setJoinedDate(new Date(2007,12,3));
 //        minh.setPhone("09342432332");
-//        minh.setStudentId("B7850");
+//        minh.setStudentId("B100");
 //        minh.setImage("3.jpg");
 //        StudentDB sdb = new StudentDB();
 //        Classes.Class c = new Classes.Class();
 //        c.setClassID(1);
 //        c.setStatus(true);
-//        sdb.insertStudent(minh);
+//        sdb.insertStudent(minh,c);
 //        sdb.getAllStudent();
 //
 //    }
     public StudentDB() {
         conn = DBUtility.openConnection();
     }
-    public void insertStudent(Student dummyStudent){
+    public void insertStudent(Student dummyStudent, Classes.Class dummyClass){
         String insertQuery = "insert into Students"
                     + " values('"
                     + dummyStudent.getStudentId()
@@ -61,8 +61,15 @@ public class StudentDB {
                     + "," + (dummyStudent.isStatus() ? 1 : 0)+ ""
                     + ",'" + dummyStudent.getImage()+ "'"
                     + ")";
+        String insertClass = "insert into class_student"
+                    + " values('"
+                    + dummyStudent.getStudentId()
+                    + "'," + dummyClass.getClassID()+ ""
+                    + ")";
         try {
             pstmt = conn.prepareStatement(insertQuery);
+            pstmt.execute();
+            pstmt = conn.prepareStatement(insertClass);
             pstmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
@@ -85,7 +92,7 @@ public class StudentDB {
             Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
         }       
     }
-    public void deactiveStudent(Student dummyStudent){
+    public void deactivateStudent(Student dummyStudent){
         String query = "Update Students set status = 0 where student_id="+"'"+dummyStudent.getStudentId()+"'";
         try {
             pstmt = conn.prepareStatement(query);
@@ -94,7 +101,7 @@ public class StudentDB {
             Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void activeStudent(Student dummyStudent){
+    public void activateStudent(Student dummyStudent){
         String query = "Update Students set status = 1 where student_id="+"'"+dummyStudent.getStudentId()+"'";
         try {           
             pstmt = conn.prepareStatement(query);
