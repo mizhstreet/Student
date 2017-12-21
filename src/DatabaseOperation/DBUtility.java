@@ -5,6 +5,7 @@
  */
 package DatabaseOperation;
 
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,9 +24,7 @@ public class DBUtility {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             con = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=StudentManagement","sa","Minhvjp98");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DBUtility.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DBUtility.class.getName()).log(Level.SEVERE, null, ex);
         }
         return con;

@@ -20,8 +20,18 @@ public class Student {
     private Date joinedDate;
     private String address;   
     private boolean status;
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public boolean isStatus() {
+        
         return status;
     }
 
