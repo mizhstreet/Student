@@ -25,41 +25,40 @@ public class StudentDB {
     PreparedStatement pstmt;
     CallableStatement cstmt;
     ResultSet rs;
-//    Test chuc nang
-//    public static void main(String[] args) {
-//        Student minh = new Student();
-//        minh.setAddress("tan dan");
-//        minh.setDob(new Date(2007,12,3));
-//        minh.setFname("MInh");
-//        minh.setLname("biu");
-//        minh.setStatus(true);
-//        minh.setJoinedDate(new Date(2007,12,3));
-//        minh.setPhone("09342432332");
-//        minh.setStudentId("B100");
-//        minh.setImage("3.jpg");
-//        StudentDB sdb = new StudentDB();
-//        Classes.Class c = new Classes.Class();
-//        c.setClassID(1);
-//        c.setStatus(true);
-//        sdb.insertStudent(minh,c);
-//        sdb.getAllStudent();
-//
-//    }
+    public static void main(String[] args) {
+        Student minh = new Student();
+        minh.setAddress("tan dan");
+        minh.setDob(new Date(2007,12,3));
+        minh.setFname("MInh");
+        minh.setLname("biu");
+        minh.setStatus(true);
+        minh.setRollNo("B7853");
+        minh.setJoinedDate(new Date(2007,12,3));
+        minh.setPhone("09342432332");
+        minh.setImage("3.jpg");
+        StudentDB sdb = new StudentDB();
+        Classes.Class c = new Classes.Class();
+        c.setClassID(1);
+        c.setStatus(true);
+        sdb.insertStudent(minh,c);
+        sdb.getAllStudent();
+
+    }
     public StudentDB() {
         conn = DBUtility.openConnection();
     }
     public void insertStudent(Student dummyStudent, Classes.Class dummyClass){
         String insertQuery = "insert into Students"
                     + " values('"
-                    + dummyStudent.getStudentId()
-                    + "','" + dummyStudent.getFname() + "'"
-                    + ",'" + dummyStudent.getLname() + "'"
+                    + dummyStudent.getFname()
+                    + "','" + dummyStudent.getLname() + "'"
                     + ",'" + dummyStudent.getDob()+ "'"
                     + ",'" + dummyStudent.getPhone() + "'"
                     + ",'" + dummyStudent.getJoinedDate()+ "'"
                     + ",'" + dummyStudent.getAddress() + "'"
                     + "," + (dummyStudent.isStatus() ? 1 : 0)+ ""
                     + ",'" + dummyStudent.getImage()+ "'"
+                    + ",'" + dummyStudent.getRollNo()+ "'"
                     + ")";
         String insertClass = "insert into class_student"
                     + " values('"
@@ -69,8 +68,8 @@ public class StudentDB {
         try {
             pstmt = conn.prepareStatement(insertQuery);
             pstmt.execute();
-            pstmt = conn.prepareStatement(insertClass);
-            pstmt.execute();
+//            pstmt = conn.prepareStatement(insertClass);
+//            pstmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
         }

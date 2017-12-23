@@ -11,8 +11,7 @@ package Classes;
  */
 public class Attendance {
     private int studentId;
-    private boolean attendance;
-    private String remark;
+    private byte attendance;
     private int sessionId;
 
     public int getStudentId() {
@@ -23,20 +22,12 @@ public class Attendance {
         this.studentId = studentId;
     }
 
-    public boolean isAttendant() {
+    public byte isAttendant() {
         return attendance;
     }
 
-    public void setAttendant(boolean attendance) {
+    public void setAttendant(byte attendance) {
         this.attendance = attendance;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     public int getSessionId() {

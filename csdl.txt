@@ -1,7 +1,7 @@
 
 create table admin (id int identity primary key, username varchar(100), password text, status bit)
 
-create table Students (student_id varchar(10) primary key,fname varchar(45),lname varchar(45),dob DATE,phone varchar(15),joined_date DATE,address text)
+create table Students (student_id int identity primary key,fname varchar(45),lname varchar(45),dob DATE,phone varchar(15),joined_date DATE,address text,status bit,image varchar(100), rollNo varchar(10) unique)
 
 create table Semester (sem_id int identity primary key, name varchar(45))
 
@@ -9,15 +9,15 @@ create table Subjects (subject_id int identity primary key, name varchar(45), se
 
 create table Class (class_id int identity primary key, name varchar(6), description text, status bit)
 
-create table Class_Student (student_id varchar(10) foreign key references Students(student_id), class_id int foreign key references Class(class_id))
+create table Class_Student (student_id int foreign key references Students(student_id), class_id int foreign key references Class(class_id))
 	
 create table Subject_Sessions (session_id int identity primary key, subject_id int foreign key references Subjects(subject_id), name varchar(100))
 
-create table Attendance (student_id varchar(10) foreign key references Students(student_id), attendant bit, remark text, session_id int foreign key references Subject_Sessions(s   ession_id)) 
+create table Attendance (attend_id int identity primary key, isMarked bit, session_id int foreign key references Subject_Sessions(session_id)) 
+create table Attendance_Student(attend_id int foreign key references Attendance(attend_id), student_id int foreign key references Students(student_id))
+create table Exam (exam_id int identity primary key, exam_date date, name varchar(100), subject_id int foreign key references Subjects(subject_id), condition int, class_id int foreign key references Class(Class_id))
 
-create table Exam (exam_id int identity primary key, exam_date date, name varchar(100), subject_id int foreign key references Subjects(subject_id), condition int)
-
-create table Exam_Result(exam_id int foreign key references Exam(exam_id), student_id varchar(10) foreign key references Students(student_id), mark int, remark text)
+create table Exam_Result(exam_id int foreign key references Exam(exam_id), student_id int foreign key references Students(student_id), mark int, remark text)
 
 insert into Semester values ('Ki I')
 insert into Semester values ('Ki II')
@@ -30,4 +30,23 @@ alter table Students add image varchar(100)
 
 ---new commit ------
 
-alter table Exam add class_id int foreign key references Class(Class_id)
+alter table Exam add 
+
+---New commit------
+alter table Attendance drop column remark
+
+----New Commit -------
+Insert into Subjects values('Java I',2,'None',1)
+Insert into Subjects values('Java II',2,'None',1)
+Insert into Subjects values('AD Java I',2,'None',1)
+Insert into Subjects values('ADJava II',2,'None',1)
+Insert into Subjects values('C Program',1,'None',1)
+
+
+Insert Into Subject_Sessions values(1, 'Java I Lab 1')
+Insert Into Subject_Sessions values(1, 'Java I Lab 2')
+Insert Into Subject_Sessions values(1, 'Java I Lab 3')
+Insert Into Subject_Sessions values(1, 'Java I Lab 4')
+Insert Into Subject_Sessions values(1, 'Java I Lab 5')
+Insert Into Subject_Sessions values(1, 'Java I Lab 6')
+Insert Into Subject_Sessions values(1, 'Java I Lab 7')

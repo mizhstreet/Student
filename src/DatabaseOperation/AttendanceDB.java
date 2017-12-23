@@ -25,13 +25,14 @@ public class AttendanceDB {
     public AttendanceDB() {
         conn = DBUtility.openConnection();
     }
-    
+    public static void main(String[] args) {
+        
+    }
     public void rollUp(Attendance dummyAttendance){
         String sql = "insert into Attendance"
                     + " values('"
                     + dummyAttendance.getStudentId()
                     + "'," + dummyAttendance.isAttendant()+ ""
-                    + ",'" + dummyAttendance.getRemark()+ "'"
                     + ",'" + dummyAttendance.getSessionId()+ "'"
                     + ")";
         try {

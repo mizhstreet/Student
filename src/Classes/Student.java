@@ -5,6 +5,7 @@
  */
 package Classes;
 
+import OtherComponents.RollUpStatus;
 import java.sql.Date;
 
 /**
@@ -12,7 +13,7 @@ import java.sql.Date;
  * @author mbiuu
  */
 public class Student {
-    private String studentId;
+    private int studentId;
     private String fname;
     private String lname;
     private String phone;
@@ -21,9 +22,28 @@ public class Student {
     private String address;   
     private boolean status;
     private String image;
+    private String rollNo;
+    private RollUpStatus rollUpStatus;
 
+    
+    public RollUpStatus getRollUpStatus() {
+        return rollUpStatus;
+    }
+
+    public void setRollUpStatus(RollUpStatus rollUpStatus) {
+        this.rollUpStatus = rollUpStatus;
+    }
+     
     public String getImage() {
         return image;
+    }
+
+    public String getRollNo() {
+        return rollNo;
+    }
+
+    public void setRollNo(String rollNo) {
+        this.rollNo = rollNo;
     }
 
     public void setImage(String image) {
@@ -39,7 +59,7 @@ public class Student {
         this.status = status;
     }
 
-    public String getStudentId() {
+    public int getStudentId() {
         return studentId;
     }
 
@@ -67,7 +87,7 @@ public class Student {
         return address;
     }
 
-    public void setStudentId(String studentId) {
+    public void setStudentId(int studentId) {
         this.studentId = studentId;
     }
 
