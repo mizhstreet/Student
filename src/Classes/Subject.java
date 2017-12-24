@@ -11,10 +11,16 @@ package Classes;
  */
 public class Subject {
     private String name;
+    private int subject_id;
     private byte semId;
     private String description;
     private boolean status;
 
+    @Override
+    public String toString() {
+        return name;
+    }
+    
     public String getName() {
         return name;
     }
@@ -46,4 +52,13 @@ public class Subject {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
+    public int getSubject_id() {
+        return subject_id;
+    }
+
+    public void setSubject_id(int subject_id) {
+        this.subject_id = subject_id;
+    }
+    
 }

@@ -14,6 +14,18 @@ public class Class {
     private String name;
     private String description;
     private boolean status;
+
+    public Class() {
+    }
+
+    public Class(int classID, String name, String description, boolean status) {
+        this.classID = classID;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
+    
+    
     
     public int getClassID() {
         return classID;
@@ -45,6 +57,11 @@ public class Class {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
     
 }

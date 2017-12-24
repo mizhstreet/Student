@@ -26,10 +26,7 @@ public class AttendanceDB {
     public AttendanceDB() {
         conn = DBUtility.openConnection();
     }
-    public static void main(String[] args) {
-        
-    }
-    public void rollUp(Attendance dummyAttendance, Student dummyStudent){
+    public void rollUp(Attendance dummyAttendance){
         String sql = "insert into Attendance"
                     + " values("
                     + (dummyAttendance.isMarked() ? 1 : 0)
@@ -44,8 +41,19 @@ public class AttendanceDB {
         }
         
     }
-    public void editStudentAttendance(Attendance dummyAttedance){
+    public void editStudentAttendance(Student dummyStudent){
         String sql = "Update Attendance set attendant=";
     }
-    
+    public void rollUpStudent(Attendance dummyAttendance, Student dummyStudent, byte stt){
+//        String sql = "Insert into Attendance_student set attendstatus="+stt+" where"
+//                + " attend_id ="+dummyAttendance.getAttendID()+" AND student_id="+dummyStudent.getStudentId();
+        String sql = "Insert into Attendance_Student values("+dummyAttendance.getAttendID()+","
+                +dummyStudent.getStudentId()+","+stt+")";
+        try {
+            pstmt = conn.prepareStatement(sql);
+             pstmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(AttendanceDB.class.getName()).log(Level.SEVERE, null, ex);
+        }       
+    }
 }

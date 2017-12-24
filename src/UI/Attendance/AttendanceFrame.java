@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package UI;
+package UI.Attendance;
 
 import Classes.Attendance;
 import Classes.Student;
+import DatabaseOperation.AttendanceDB;
 import DatabaseOperation.StudentDB;
 import OtherComponents.AttendanceTableModel;
 import OtherComponents.RollUpStatus;
@@ -32,7 +33,9 @@ public class AttendanceFrame extends javax.swing.JFrame {
     List<Student> listPerson = new ArrayList<>();
     private AttendanceTableModel tableModel;
     private boolean isMarked;
-    private int sessionID;
+    private int sessionID = 1;
+    private int classId = 1;
+    private int attendId;
     public AttendanceFrame() {
         initComponents();
         StudentDB sdb = new StudentDB();       
@@ -165,7 +168,11 @@ public class AttendanceFrame extends javax.swing.JFrame {
         
         for (int i = 0; i < rowCount; i++) {
             Attendance atd = new Attendance();
+            Student std = listPerson.get(i);
             String stt = tblAttend.getValueAt(i, 4)+"";
+            atd.setClassID(classId);
+            atd.setMarked(true);
+            atd.setSessionId(sessionID);
             byte type = 0;
             if(null != stt)switch (stt) {
                 case "P":
@@ -180,7 +187,9 @@ public class AttendanceFrame extends javax.swing.JFrame {
                 default:
                     break;
             }
-            Student std = listPerson.get(i);
+            AttendanceDB adb = new AttendanceDB();
+//            adb.rollUp(atd);
+            adb.rollUpStudent(atd, std, type);
             JOptionPane.showMessageDialog(null, std.getStudentId());
         }
     }//GEN-LAST:event_txtFinishActionPerformed
