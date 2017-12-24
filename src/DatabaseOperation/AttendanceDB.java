@@ -6,6 +6,7 @@
 package DatabaseOperation;
 
 import Classes.Attendance;
+import Classes.Student;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,12 +29,12 @@ public class AttendanceDB {
     public static void main(String[] args) {
         
     }
-    public void rollUp(Attendance dummyAttendance){
+    public void rollUp(Attendance dummyAttendance, Student dummyStudent){
         String sql = "insert into Attendance"
-                    + " values('"
-                    + dummyAttendance.getStudentId()
-                    + "'," + dummyAttendance.isAttendant()+ ""
-                    + ",'" + dummyAttendance.getSessionId()+ "'"
+                    + " values("
+                    + (dummyAttendance.isMarked() ? 1 : 0)
+                    + "," + dummyAttendance.getSessionId()+ ""
+                    + "," + dummyAttendance.getClassID()+ ""
                     + ")";
         try {
             pstmt = conn.prepareStatement(sql);

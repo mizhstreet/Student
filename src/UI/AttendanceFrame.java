@@ -29,11 +29,13 @@ public class AttendanceFrame extends javax.swing.JFrame {
     /**
      * Creates new form AttendanceFrame
      */
+    List<Student> listPerson = new ArrayList<>();
     private AttendanceTableModel tableModel;
+    private boolean isMarked;
+    private int sessionID;
     public AttendanceFrame() {
         initComponents();
-        StudentDB sdb = new StudentDB();
-        List<Student> listPerson = new ArrayList<>();
+        StudentDB sdb = new StudentDB();       
         Classes.Class c = new Classes.Class();
         c.setClassID(1);
         ResultSet rs = sdb.getAllStudentInClass(c);
@@ -42,8 +44,9 @@ public class AttendanceFrame extends javax.swing.JFrame {
                 Student minh = new Student();
                 minh.setFname(rs.getString("fname"));
                 minh.setLname(rs.getString("lname"));
-//                minh.setStudentId(rs.getString("sid"));
+                minh.setRollNo(rs.getString("rollno"));
                 minh.setRollUpStatus(new RollUpStatus("P"));
+                minh.setStudentId(rs.getInt("sid"));
                 listPerson.add(minh);
             }
         } catch (SQLException ex) {
@@ -58,8 +61,6 @@ public class AttendanceFrame extends javax.swing.JFrame {
         tblAttend.setDefaultRenderer(RollUpStatus.class, new RollUpStatusCellRenderer());
 		tblAttend.setDefaultEditor(RollUpStatus.class, new RollUpStatusCellEditor(listRs));
 		tblAttend.setRowHeight(25);
-        lblSessId.setVisible(false);
-        lblSessId.setText("1");
     }
 
     /**
@@ -74,7 +75,6 @@ public class AttendanceFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        lblSessId = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAttend = new javax.swing.JTable();
         txtFinish = new javax.swing.JButton();
@@ -98,8 +98,6 @@ public class AttendanceFrame extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(58, 58, 58)
                 .addComponent(jLabel1)
-                .addGap(110, 110, 110)
-                .addComponent(lblSessId)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -111,9 +109,7 @@ public class AttendanceFrame extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                            .addComponent(lblSessId))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                         .addGap(22, 22, 22))))
         );
 
@@ -166,8 +162,8 @@ public class AttendanceFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         int rowCount = tblAttend.getRowCount();
         String text = tblAttend.getValueAt(0, 0)+"";
-        JOptionPane.showMessageDialog(null, tblAttend.getRowCount());
-        for (int i = 0; i < rowCount-1; i++) {
+        
+        for (int i = 0; i < rowCount; i++) {
             Attendance atd = new Attendance();
             String stt = tblAttend.getValueAt(i, 4)+"";
             byte type = 0;
@@ -184,9 +180,8 @@ public class AttendanceFrame extends javax.swing.JFrame {
                 default:
                     break;
             }
-            atd.setAttendant(type);
-            atd.setSessionId(Integer.parseInt(lblSessId.getText()));
-            atd.setStudentId(WIDTH);
+            Student std = listPerson.get(i);
+            JOptionPane.showMessageDialog(null, std.getStudentId());
         }
     }//GEN-LAST:event_txtFinishActionPerformed
 
@@ -228,7 +223,6 @@ public class AttendanceFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblSessId;
     private javax.swing.JTable tblAttend;
     private javax.swing.JButton txtFinish;
     // End of variables declaration//GEN-END:variables

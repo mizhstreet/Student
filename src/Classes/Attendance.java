@@ -10,32 +10,41 @@ package Classes;
  * @author mbiuu
  */
 public class Attendance {
-    private int studentId;
-    private byte attendance;
+    private int attendID;
     private int sessionId;
+    private boolean marked;
+    private int ClassID;
 
-    public int getStudentId() {
-        return studentId;
+    public int getClassID() {
+        return ClassID;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
+    public void setClassID(int ClassID) {
+        this.ClassID = ClassID;
+    }
+    
+    public int getAttendID() {
+        return attendID;
     }
 
-    public byte isAttendant() {
-        return attendance;
+    public void setAttendID(int attendID) {
+        this.attendID = attendID;
     }
-
-    public void setAttendant(byte attendance) {
-        this.attendance = attendance;
-    }
-
+    
     public int getSessionId() {
         return sessionId;
     }
 
     public void setSessionId(int sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public boolean isMarked() {
+        return marked;
+    }
+
+    public void setMarked(boolean marked) {
+        this.marked = marked;
     }
     
 }

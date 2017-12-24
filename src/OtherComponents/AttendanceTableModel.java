@@ -46,7 +46,7 @@ public class AttendanceTableModel extends AbstractTableModel {
 		
 		switch (columnIndex) {
 		case 1:
-				person.setStudentId((int) value);
+				person.setRollNo((String) value);
 			break;		
 		case 2:
 				person.setFname((String) value);
@@ -70,7 +70,7 @@ public class AttendanceTableModel extends AbstractTableModel {
 				returnValue = rowIndex + 1;
 			break;
 		case 1:
-				returnValue = person.getStudentId();
+				returnValue = person.getRollNo();
 			break;
 		case 2:
 				returnValue = person.getFname();

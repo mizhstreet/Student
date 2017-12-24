@@ -13,8 +13,10 @@ create table Class_Student (student_id int foreign key references Students(stude
 	
 create table Subject_Sessions (session_id int identity primary key, subject_id int foreign key references Subjects(subject_id), name varchar(100))
 
-create table Attendance (attend_id int identity primary key, isMarked bit, session_id int foreign key references Subject_Sessions(session_id)) 
-create table Attendance_Student(attend_id int foreign key references Attendance(attend_id), student_id int foreign key references Students(student_id))
+create table Attendance (attend_id int identity primary key, isMarked bit, session_id int foreign key references Subject_Sessions(session_id), class_id int foreign key references Class(class_id)) 
+
+create table Attendance_Student(attend_id int foreign key references Attendance(attend_id), student_id int foreign key references Students(student_id), attendstatus bit)
+
 create table Exam (exam_id int identity primary key, exam_date date, name varchar(100), subject_id int foreign key references Subjects(subject_id), condition int, class_id int foreign key references Class(Class_id))
 
 create table Exam_Result(exam_id int foreign key references Exam(exam_id), student_id int foreign key references Students(student_id), mark int, remark text)
@@ -24,16 +26,6 @@ insert into Semester values ('Ki II')
 insert into Semester values ('Ki III')
 insert into Semester values ('Ki IV')
 
------new commit ----------
-alter table Students add status bit
-alter table Students add image varchar(100)
-
----new commit ------
-
-alter table Exam add 
-
----New commit------
-alter table Attendance drop column remark
 
 ----New Commit -------
 Insert into Subjects values('Java I',2,'None',1)
@@ -50,3 +42,6 @@ Insert Into Subject_Sessions values(1, 'Java I Lab 4')
 Insert Into Subject_Sessions values(1, 'Java I Lab 5')
 Insert Into Subject_Sessions values(1, 'Java I Lab 6')
 Insert Into Subject_Sessions values(1, 'Java I Lab 7')
+
+Insert Into Class values('C1603M', 'Dang hoc ki 2',1)
+Insert Into Class values('C1606M', 'Dang hoc ki 1',1)
