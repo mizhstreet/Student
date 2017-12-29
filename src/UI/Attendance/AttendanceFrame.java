@@ -8,6 +8,7 @@ package UI.Attendance;
 import Classes.Attendance;
 import Classes.Student;
 import DatabaseOperation.AttendanceDB;
+import DatabaseOperation.ClassDB;
 import DatabaseOperation.StudentDB;
 import OtherComponents.AttendanceTableModel;
 import OtherComponents.RollUpStatus;
@@ -21,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-
 /**
  *
  * @author mbiuu
@@ -32,15 +32,18 @@ public class AttendanceFrame extends javax.swing.JFrame {
      */
     List<Student> listPerson = new ArrayList<>();
     private AttendanceTableModel tableModel;
-    private boolean isMarked;
-    private int sessionID = 1;
-    private int classId = 1;
-    private int attendId;
-    public AttendanceFrame() {
+    private Attendance atd;
+
+    public AttendanceFrame(Attendance atd) {
+        this.atd = atd;
         initComponents();
+        if(atd.isMarked()){
+            jLabel4.setText("Already Rolled Up");
+        }
         StudentDB sdb = new StudentDB();       
         Classes.Class c = new Classes.Class();
-        c.setClassID(1);
+        c.setClassID(atd.getClassID());
+        jLabel3.setText(new ClassDB().getClassNameByID(atd.getClassID()));
         ResultSet rs = sdb.getAllStudentInClass(c);
         try {
             while(rs.next()){
@@ -55,7 +58,9 @@ public class AttendanceFrame extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(AttendanceFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+                
         tableModel = new AttendanceTableModel(listPerson);
+
         List<RollUpStatus> listRs = new ArrayList<>();
 		listRs.add(new RollUpStatus("P"));
 		listRs.add(new RollUpStatus("PA"));
@@ -64,6 +69,11 @@ public class AttendanceFrame extends javax.swing.JFrame {
         tblAttend.setDefaultRenderer(RollUpStatus.class, new RollUpStatusCellRenderer());
 		tblAttend.setDefaultEditor(RollUpStatus.class, new RollUpStatusCellEditor(listRs));
 		tblAttend.setRowHeight(25);
+       
+    }
+    
+    public AttendanceFrame() {
+        
     }
 
     /**
@@ -78,6 +88,8 @@ public class AttendanceFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAttend = new javax.swing.JTable();
         txtFinish = new javax.swing.JButton();
@@ -92,28 +104,39 @@ public class AttendanceFrame extends javax.swing.JFrame {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-check-file-filled-50.png"))); // NOI18N
 
+        jLabel3.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(254, 254, 254));
+
+        jLabel4.setBackground(new java.awt.Color(233, 227, 39));
+        jLabel4.setForeground(new java.awt.Color(233, 227, 39));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(35, 35, 35)
                 .addComponent(jLabel2)
-                .addGap(58, 58, 58)
-                .addComponent(jLabel1)
+                .addGap(43, 43, 43)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                        .addGap(22, 22, 22))))
+                .addGap(21, 21, 21)
+                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addGap(4, 4, 4)
+                .addComponent(jLabel4))
         );
 
         tblAttend.setModel(new javax.swing.table.DefaultTableModel(
@@ -141,7 +164,7 @@ public class AttendanceFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1056, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(txtFinish, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -151,11 +174,11 @@ public class AttendanceFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(txtFinish, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pack();
@@ -163,35 +186,18 @@ public class AttendanceFrame extends javax.swing.JFrame {
 
     private void txtFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFinishActionPerformed
         // TODO add your handling code here:
-        int rowCount = tblAttend.getRowCount();
-        String text = tblAttend.getValueAt(0, 0)+"";
-        
-        for (int i = 0; i < rowCount; i++) {
-            Attendance atd = new Attendance();
-            Student std = listPerson.get(i);
-            String stt = tblAttend.getValueAt(i, 4)+"";
-            atd.setClassID(classId);
-            atd.setMarked(true);
-            atd.setSessionId(sessionID);
-            byte type = 0;
-            if(null != stt)switch (stt) {
-                case "P":
-                    type = 1;
-                    break;
-                case "PA":
-                    type =2;
-                    break;
-                case "A":
-                    type =0;
-                    break;
-                default:
-                    break;
-            }
-            AttendanceDB adb = new AttendanceDB();
-//            adb.rollUp(atd);
-            adb.rollUpStudent(atd, std, type);
-            JOptionPane.showMessageDialog(null, std.getStudentId());
+        if(!atd.isMarked()){
+           atd.setMarked(true);
+           int id = new AttendanceDB().rollUp(atd);
+           atd.setAttendID(id);
+           insertStudentToAttendance();
+           JOptionPane.showMessageDialog(null, "Rolled Up Successfully!");
+        }else {
+           new AttendanceDB().deleteRolledStudent(atd);
+           insertStudentToAttendance();
+           JOptionPane.showMessageDialog(null, "Edited Student Attendance Successfully!");
         }
+                   
     }//GEN-LAST:event_txtFinishActionPerformed
 
     /**
@@ -230,9 +236,39 @@ public class AttendanceFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblAttend;
     private javax.swing.JButton txtFinish;
     // End of variables declaration//GEN-END:variables
+    public void insertStudentToAttendance(){
+        String sql = "Insert into Attendance_Student values";
+        int rowCount = tblAttend.getRowCount();
+        String text = tblAttend.getValueAt(0, 0)+"";       
+        for (int i = 0; i < rowCount; i++) {
+            Student std = listPerson.get(i);
+            String stt = tblAttend.getValueAt(i, 4)+"";           
+            byte type = 0;
+            switch (stt) {
+                case "P":
+                    type = 1;
+                    break;
+                case "PA":
+                    type =2;
+                    break;
+                case "A":
+                    type =0;
+                    break;
+                default:
+                    break;
+            }
+            String sqlPlus = "("+atd.getAttendID()+","+std.getStudentId()+","+type+"),";
+            sql+=sqlPlus;            
+        }
+        String finalSQL = sql.substring(0, sql.length()-1);
+        new AttendanceDB().rollUpStudent(finalSQL);
+    }
+
 }

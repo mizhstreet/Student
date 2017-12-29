@@ -14,6 +14,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,7 +34,7 @@ public class StudentDB {
 //        minh.setFname("MInh");
 //        minh.setLname("biu");
 //        minh.setStatus(true);
-//        minh.setRollNo("B7853");
+//        minh.setRollNo("B7855");
 //        minh.setJoinedDate(new Date(2007,12,3));
 //        minh.setPhone("09342432332");
 //        minh.setImage("3.jpg");
@@ -42,14 +43,15 @@ public class StudentDB {
 //        c.setClassID(1);
 //        c.setStatus(true);
 //        sdb.insertStudent(minh,c);
-//        sdb.getAllStudent();
-//        sdb.activateStudent(minh);
+////        sdb.getAllStudent();
+////        sdb.activateStudent(minh);
 //
 //    }
     public StudentDB() {
         conn = DBUtility.openConnection();
     }
-    public void insertStudent(Student dummyStudent, Classes.Class dummyClass){
+    public boolean insertStudent(Student dummyStudent, Classes.Class dummyClass){
+        boolean check = false;
         String insertQuery = "insert into Students"
                     + " values('"
                     + dummyStudent.getFname()
@@ -58,7 +60,7 @@ public class StudentDB {
                     + ",'" + dummyStudent.getPhone() + "'"
                     + ",'" + dummyStudent.getJoinedDate()+ "'"
                     + ",'" + dummyStudent.getAddress() + "'"
-                    + "," + (dummyStudent.isStatus() ? 1 : 0)+ ""
+                    + "," + (dummyStudent.isStatus()  ?  1 : 0)+ ""
                     + ",'" + dummyStudent.getImage()+ "'"
                     + ",'" + dummyStudent.getRollNo()+ "'"
                     + ")";
@@ -67,18 +69,20 @@ public class StudentDB {
         try {
             pstmt = conn.prepareStatement(insertQuery);
             pstmt.execute();
-            System.out.println(getStudentId);
+//            System.out.println(getStudentId);
             pstmt= conn.prepareStatement(getStudentId);
             ResultSet rss =pstmt.executeQuery();
             while(rss.next()){
                 dummyStudent.setStudentId(rss.getInt("student_id"));
             }
-            insertStudentToClass(dummyStudent, dummyClass);
+            if(dummyClass != null)
+            check=insertStudentToClass(dummyStudent, dummyClass);
         } catch (SQLException ex) {
             Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return check;
     }
-    public void insertStudentToClass(Student dummyStudent, Classes.Class dummyClass){
+    public boolean insertStudentToClass(Student dummyStudent, Classes.Class dummyClass){
         String insertClass = "insert into class_student"
                     + " values('"
                     + dummyStudent.getStudentId()
@@ -86,21 +90,24 @@ public class StudentDB {
                     + ")";
         try {
             pstmt= conn.prepareStatement(insertClass);
-            pstmt.execute();
+            int i = pstmt.executeUpdate();
+            if(i>0)
+                return true;
         } catch (SQLException ex) {
             Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        return false;
     }
-    public void editStudent(Student dummyStudent){
-        String updateQuery ="update Students set fname = '"
+    public void editStudent(Student dummyStudent,String roll){
+        String updateQuery ="update Students set rollno='"
+                    +dummyStudent.getRollNo()+"', fname = '"
                     +dummyStudent.getFname()+"', lname='"
                     +dummyStudent.getLname()+"', dob = '"
                     +dummyStudent.getDob()+"', phone = '"
                     +dummyStudent.getPhone()+"',joined_date = '"
                     +dummyStudent.getJoinedDate()+"', address = '"
                     +dummyStudent.getAddress()+"'"
-                    +" where rollno ="+"'"+dummyStudent.getRollNo()+"'"
+                    +" where rollno ="+"'"+roll+"'"
                 ;
         try {
             pstmt = conn.prepareStatement(updateQuery);
@@ -133,7 +140,6 @@ public class StudentDB {
                 + "from Students s inner join Class_Student on s.student_id = Class_Student.student_id "
                 + "inner join Class c on Class_Student.class_id = c.class_id where c.class_id =" + dummyClass.getClassID();
         try {
-            System.out.println(query);
             pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();
         } catch (SQLException ex) {
@@ -146,6 +152,29 @@ public class StudentDB {
                 + "lname, dob, phone, joined_date, address "
                 + "from Students s inner join Class_Student on s.student_id = Class_Student.student_id "
                 + "inner join Class c on Class_Student.class_id = c.class_id ";
+        try {
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
+        public ResultSet getAllOnlyStudent(String query){
+            if(query == null)
+            query = "select * from students where status = 1";
+        try {
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
+    public ResultSet SearchStudent(String rollNo){
+        if(rollNo == null)
+            JOptionPane.showMessageDialog(null,"Input your id student you want to search");
+            String query = "select * from students where rollNo = '"+ rollNo +"' and status = 1";
         try {
             pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();

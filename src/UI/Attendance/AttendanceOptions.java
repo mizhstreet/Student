@@ -5,8 +5,10 @@
  */
 package UI.Attendance;
 
+import Classes.Attendance;
 import Classes.Subject;
 import Classes.SubjectSession;
+import DatabaseOperation.AttendanceDB;
 import DatabaseOperation.ClassDB;
 import DatabaseOperation.SubjectDB;
 import DatabaseOperation.SubjectSessionDB;
@@ -62,7 +64,7 @@ public class AttendanceOptions extends javax.swing.JFrame {
         cboSubject = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
         cboSession = new javax.swing.JComboBox();
-        jLabel5 = new javax.swing.JLabel();
+        btnOk = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -112,7 +114,12 @@ public class AttendanceOptions extends javax.swing.JFrame {
 
         cboSession.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_ok.png"))); // NOI18N
+        btnOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_ok.png"))); // NOI18N
+        btnOk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnOkMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -135,7 +142,7 @@ public class AttendanceOptions extends javax.swing.JFrame {
                         .addComponent(cboSession, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel5)))
+                        .addComponent(btnOk)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -154,7 +161,7 @@ public class AttendanceOptions extends javax.swing.JFrame {
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboSession, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
+                .addComponent(btnOk)
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -190,6 +197,27 @@ public class AttendanceOptions extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cboSubjectItemStateChanged
 
+    private void btnOkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOkMouseClicked
+        // TODO add your handling code here:
+        AttendanceDB adb = new AttendanceDB();
+        Attendance atd = new Attendance();
+        String className = cboClass.getSelectedItem().toString();
+        String sessionName = cboSession.getSelectedItem().toString();
+        atd.setMarked(false);
+        atd.setClassID(new ClassDB().getClassIDByClassName(className));
+        atd.setSessionId(new SubjectSessionDB().getSessionIDBySessionName(sessionName));
+        ResultSet rs = adb.checkIfExisted(className, sessionName);
+        try {
+            while(rs.next()){
+               atd.setAttendID(rs.getInt("attend_id"));
+               atd.setMarked(true);              
+            }
+            new AttendanceFrame(atd).setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(AttendanceOptions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnOkMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -224,6 +252,7 @@ public class AttendanceOptions extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel btnOk;
     private javax.swing.JComboBox cboClass;
     private javax.swing.JComboBox cboSession;
     private javax.swing.JComboBox cboSubject;
@@ -231,7 +260,6 @@ public class AttendanceOptions extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables

@@ -76,4 +76,32 @@ public class ClassDB {
         }
         return rs;
     }
+    public int getClassIDByClassName(String className){
+        String query = "select class_id from Class where name = '"+className+"'";
+        int classID = 0;
+        try {
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                classID = rs.getInt("class_id");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return classID;
+    } 
+    public String getClassNameByID(int id){
+        String className= "";
+        String sql = "select * from Class where class_id="+id;
+        try {
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                className = rs.getString("name");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return className;
+    }
 }

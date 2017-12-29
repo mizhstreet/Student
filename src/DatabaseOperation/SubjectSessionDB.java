@@ -47,4 +47,18 @@ public class SubjectSessionDB {
         
         return rs;
     }
+    public int getSessionIDBySessionName(String sessionName){
+        String query = "select session_id from subject_sessions where name = '"+sessionName+"'";
+        int sessionID = 0;
+        try {
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                sessionID = rs.getInt("session_id");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sessionID;
+    } 
 }
