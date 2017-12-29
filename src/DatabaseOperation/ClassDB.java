@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +34,8 @@ public class ClassDB {
 //        ClassDB cdb = new ClassDB();
 //        cdb.activateClass(c);
 //    }
-    public void insertClass(Classes.Class dummyClass){
+    public int insertClass(Classes.Class dummyClass){
+        int id=0;
         String insertQuery = "insert into Class"
                     + " values('"
                     + dummyClass.getName()
@@ -41,12 +43,28 @@ public class ClassDB {
                     + "," + (dummyClass.isStatus() ? 1 : 0)+ ""
                     + ")";
         try {
-            pstmt = conn.prepareStatement(insertQuery);
+            pstmt = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+            pstmt.execute();
+            rs = pstmt.getGeneratedKeys();
+            while(rs.next()){
+                id = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+    public void updateClass(Classes.Class dummyClass){
+        String query = "Update Class set name='"+dummyClass.getName()+"', "
+                + "description='"+dummyClass.getDescription()+"', "
+                + "status="+(dummyClass.isStatus() ? 1 : 0)+" "
+                + "where class_id="+dummyClass.getClassID();
+        try {
+            pstmt = conn.prepareStatement(query);
             pstmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
     public void deactivateClass(Classes.Class dummyClass){
         String query = "Update Class set status = 0 where class_id="+"'"+dummyClass.getClassID()+"'";
