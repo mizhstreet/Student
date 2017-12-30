@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,8 +26,9 @@ public class SubjectDB {
     public SubjectDB() {
         conn = DBUtility.openConnection();
     }
-    public void insertSubject(Subject dummySubject){
-        String insertQuery = "insert into Class"
+    public int insertSubject(Subject dummySubject){
+        int id = 0;
+        String insertQuery = "insert into Subjects"
                     + " values('"
                     + dummySubject.getName()
                     + "'," + dummySubject.getSemId()+ ""
@@ -34,14 +36,19 @@ public class SubjectDB {
                     + "," + (dummySubject.isStatus() ? 1 : 0)+ ""
                     + ")";
         try {
-            pstmt = conn.prepareStatement(insertQuery);
+            pstmt = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
             pstmt.execute();
+            rs = pstmt.getGeneratedKeys();
+            while(rs.next()){
+                id = rs.getInt(1);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }  
+        return id;
     }
     public ResultSet getAllSubject(){
-        String sql = "Select * from Subjects";
+        String sql = "Select subject_id, Subjects.name, description, status, Semester.name as semname from Subjects inner join Semester on Subjects.sem_id = Semester.sem_id";
         try {
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
@@ -49,5 +56,18 @@ public class SubjectDB {
             Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return rs;
+    }
+    public void updateSubject(Subject dummySubject){
+        String query = "Update Subjects set name='"+dummySubject.getName()+"', "
+                + "description='"+dummySubject.getDescription()+"', "
+                + "status="+(dummySubject.isStatus() ? 1 : 0)+", "
+                + "sem_id="+dummySubject.getSemId()+" "
+                + "where subject_id="+dummySubject.getSubject_id();
+        try {
+            pstmt = conn.prepareStatement(query);
+            pstmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

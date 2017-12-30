@@ -3,14 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package UI.Class;
+package UI.Subject;
 
+import Classes.Subject;
+import UI.Class.*;
 import DatabaseOperation.ClassDB;
+import DatabaseOperation.SemesterDB;
 import DatabaseOperation.SubjectDB;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,24 +24,29 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author mbiuu
  */
-public class ClassFrame extends javax.swing.JFrame {
+public class SubjectFrame extends javax.swing.JFrame {
     private boolean classStatus = false;
     private boolean btnAddDisabled = false;
     private boolean btnEditDisabled = true;
     DefaultTableModel tableModel;
+    DefaultComboBoxModel<String> comboBoxModel;
     /**
      * Creates new form ClassFrame
      */
-    public ClassFrame() {
+    public SubjectFrame() {
         initComponents();
-        txtClassID.setEditable(false);
+        txtSubjectId.setEditable(false);
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Subject Name");
         tableModel.addColumn("Description");
         tableModel.addColumn("Status");
+        tableModel.addColumn("Semester");
         jTable1.setModel(tableModel);
         loadDataForTable();
+        comboBoxModel = new DefaultComboBoxModel<>();
+        cboSemester.setModel(comboBoxModel);
+        loadDataForCombo();
     }
 
     /**
@@ -55,9 +64,9 @@ public class ClassFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        txtClassID = new javax.swing.JTextField();
+        txtSubjectId = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtClassName = new javax.swing.JTextField();
+        txtSubjectName = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -66,6 +75,8 @@ public class ClassFrame extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        cboSemester = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         btnAdd = new javax.swing.JLabel();
@@ -82,7 +93,7 @@ public class ClassFrame extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Miriam Mono CLM", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(254, 254, 254));
-        jLabel2.setText("Class Management");
+        jLabel2.setText("Subject Management");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -92,7 +103,7 @@ public class ClassFrame extends javax.swing.JFrame {
                 .addGap(44, 44, 44)
                 .addComponent(jLabel1)
                 .addGap(33, 33, 33)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -111,33 +122,33 @@ public class ClassFrame extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Cantarell", 1, 20)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(110, 89, 222));
-        jLabel3.setText("Class ID");
+        jLabel3.setText("Subject ID");
 
-        txtClassID.setFont(new java.awt.Font("Miriam Mono CLM", 1, 20)); // NOI18N
-        txtClassID.setForeground(new java.awt.Color(124, 124, 124));
-        txtClassID.setText("*");
-        txtClassID.setBorder(null);
-        txtClassID.addActionListener(new java.awt.event.ActionListener() {
+        txtSubjectId.setFont(new java.awt.Font("Miriam Mono CLM", 1, 20)); // NOI18N
+        txtSubjectId.setForeground(new java.awt.Color(124, 124, 124));
+        txtSubjectId.setText("*");
+        txtSubjectId.setBorder(null);
+        txtSubjectId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtClassIDActionPerformed(evt);
+                txtSubjectIdActionPerformed(evt);
             }
         });
 
         jLabel4.setBackground(new java.awt.Color(110, 89, 222));
         jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(110, 89, 222)));
 
-        txtClassName.setFont(new java.awt.Font("Miriam Mono CLM", 1, 20)); // NOI18N
-        txtClassName.setForeground(new java.awt.Color(124, 124, 124));
-        txtClassName.setBorder(null);
-        txtClassName.addActionListener(new java.awt.event.ActionListener() {
+        txtSubjectName.setFont(new java.awt.Font("Miriam Mono CLM", 1, 20)); // NOI18N
+        txtSubjectName.setForeground(new java.awt.Color(124, 124, 124));
+        txtSubjectName.setBorder(null);
+        txtSubjectName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtClassNameActionPerformed(evt);
+                txtSubjectNameActionPerformed(evt);
             }
         });
 
         jLabel5.setFont(new java.awt.Font("Cantarell", 1, 20)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(110, 89, 222));
-        jLabel5.setText("Class Name");
+        jLabel5.setText("Subject Name");
 
         jLabel6.setBackground(new java.awt.Color(110, 89, 222));
         jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(110, 89, 222)));
@@ -184,6 +195,14 @@ public class ClassFrame extends javax.swing.JFrame {
                 .addGap(0, 0, 0))
         );
 
+        jLabel11.setFont(new java.awt.Font("Cantarell", 1, 20)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(110, 89, 222));
+        jLabel11.setText("Semester");
+
+        cboSemester.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        cboSemester.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboSemester.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(110, 89, 222), 2, true));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -207,13 +226,20 @@ public class ClassFrame extends javax.swing.JFrame {
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                         .addGap(26, 26, 26)
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtClassID, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtClassName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(txtSubjectId, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtSubjectName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(27, 27, 27)
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(cboSemester, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jScrollPane2)))))
+                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                .addGap(162, 162, 162)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
@@ -223,34 +249,38 @@ public class ClassFrame extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtClassID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSubjectId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(3, 3, 3)
                 .addComponent(jLabel4)
                 .addGap(33, 33, 33)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtClassName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSubjectName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(95, 95, 95)
-                        .addComponent(jLabel9))
+                        .addComponent(jLabel9)
+                        .addGap(94, 94, 94)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(cboSemester, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(jLabel6)
                         .addGap(47, 47, 47)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
+                        .addGap(15, 15, 15)
                         .addComponent(jLabel10))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(180, Short.MAX_VALUE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(73, 73, 73))
         );
 
         jScrollPane1.setBackground(new java.awt.Color(254, 254, 254));
 
+        jTable1.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -262,6 +292,7 @@ public class ClassFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setRowHeight(25);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -315,18 +346,18 @@ public class ClassFrame extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(95, 95, 95)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(67, 67, 67)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnAdd)
                             .addComponent(btnEdit)
                             .addComponent(btnClear))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(256, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -339,19 +370,19 @@ public class ClassFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 42, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtClassNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClassNameActionPerformed
+    private void txtSubjectNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSubjectNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtClassNameActionPerformed
+    }//GEN-LAST:event_txtSubjectNameActionPerformed
 
-    private void txtClassIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClassIDActionPerformed
+    private void txtSubjectIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSubjectIdActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtClassIDActionPerformed
+    }//GEN-LAST:event_txtSubjectIdActionPerformed
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
         // TODO add your handling code here:
@@ -373,9 +404,10 @@ public class ClassFrame extends javax.swing.JFrame {
         btnAddDisabled = true;
         btnEditDisabled = false;
         int row = jTable1.getSelectedRow();
-        txtClassID.setText(jTable1.getValueAt(row, 0)+"");
-        txtClassName.setText(jTable1.getValueAt(row, 1)+"");
+        txtSubjectId.setText(jTable1.getValueAt(row, 0)+"");
+        txtSubjectName.setText(jTable1.getValueAt(row, 1)+"");
         txaDescription.setText(jTable1.getValueAt(row, 2)+"");
+        cboSemester.setSelectedItem(jTable1.getValueAt(row, 4)+"");
         switch(jTable1.getValueAt(row, 3)+""){
             case "Available": 
                 jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-checkmark-38-1.png")));
@@ -391,17 +423,21 @@ public class ClassFrame extends javax.swing.JFrame {
 
     private void btnAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMouseClicked
         // TODO add your handling code here:
-        if("".equals(txtClassName.getText()) || "".equals(txaDescription.getText())){
+        if(btnAddDisabled == true){
+            
+        }
+        else if("".equals(txtSubjectName.getText()) || "".equals(txaDescription.getText())){
             JOptionPane.showMessageDialog(null, "Please fill up the form first!");
         }else{
-            Classes.Class c = new Classes.Class();
-            c.setName(txtClassName.getText());
+            Subject c = new Subject();
+            c.setName(txtSubjectName.getText());
             c.setDescription(txaDescription.getText());
             c.setStatus(classStatus);
-            int cID = new ClassDB().insertClass(c);
+            c.setSemId((byte) (cboSemester.getSelectedIndex()+1));
+            int cID = new SubjectDB().insertSubject(c);
             JOptionPane.showMessageDialog(null, "Inserted Succesfully!");
-            txtClassID.setText(cID+"");
-            Object data[] = {cID, c.getName(), c.getDescription(), (c.isStatus() ? "Available" : "Not Available")};
+            txtSubjectId.setText(cID+"");
+            Object data[] = {cID, c.getName(), c.getDescription(), (c.isStatus() ? "Available" : "Not Available"), cboSemester.getSelectedItem()+""};
             tableModel.addRow(data);
         }
         
@@ -414,8 +450,8 @@ public class ClassFrame extends javax.swing.JFrame {
         btnAddDisabled = false;
         btnEditDisabled = true;
         jTable1.removeRowSelectionInterval(0, jTable1.getRowCount()-1);
-        txtClassID.setText("*");
-        txtClassName.setText("");
+        txtSubjectId.setText("*");
+        txtSubjectName.setText("");
         txaDescription.setText("");
         classStatus = false;
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-checkmark-38.png")));
@@ -425,20 +461,22 @@ public class ClassFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(btnEditDisabled == true){
             
-        }else if("".equals(txtClassName.getText()) || "".equals(txaDescription.getText())){
+        }else if("".equals(txtSubjectName.getText()) || "".equals(txaDescription.getText())){
             JOptionPane.showMessageDialog(null, "Please fill up the form first!");
         }else{
-            Classes.Class c = new Classes.Class();
-            c.setName(txtClassName.getText());
+            Subject c = new Subject();
+            c.setName(txtSubjectName.getText());
             c.setDescription(txaDescription.getText());
             c.setStatus(classStatus);
-            c.setClassID(Integer.parseInt(txtClassID.getText()));
-            new ClassDB().updateClass(c);
+            c.setSemId((byte) (cboSemester.getSelectedIndex()+1));
+            c.setSubject_id(Integer.parseInt(txtSubjectId.getText()));
+            new SubjectDB().updateSubject(c);
             JOptionPane.showMessageDialog(null, "Edited Successfully!");
             int row = jTable1.getSelectedRow();
-            jTable1.setValueAt(txtClassName.getText(), row, 1);
+            jTable1.setValueAt(txtSubjectName.getText(), row, 1);
             jTable1.setValueAt(txaDescription.getText(), row, 2);
             jTable1.setValueAt((classStatus ? "Available" : "Not Available"), row, 3);
+            jTable1.setValueAt(cboSemester.getSelectedItem()+"", row, 4);
         }
     }//GEN-LAST:event_btnEditMouseClicked
 
@@ -459,20 +497,21 @@ public class ClassFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SubjectFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SubjectFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SubjectFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SubjectFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ClassFrame().setVisible(true);
+                new SubjectFrame().setVisible(true);
             }
         });
     }
@@ -481,8 +520,10 @@ public class ClassFrame extends javax.swing.JFrame {
     private javax.swing.JLabel btnAdd;
     private javax.swing.JLabel btnClear;
     private javax.swing.JLabel btnEdit;
+    private javax.swing.JComboBox<String> cboSemester;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -498,20 +539,30 @@ public class ClassFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea txaDescription;
-    private javax.swing.JTextField txtClassID;
-    private javax.swing.JTextField txtClassName;
+    private javax.swing.JTextField txtSubjectId;
+    private javax.swing.JTextField txtSubjectName;
     // End of variables declaration//GEN-END:variables
-
-    public void loadDataForTable(){
-        ResultSet rs = new ClassDB().getAllClass();
+    public final void loadDataForTable(){
+        ResultSet rs = new SubjectDB().getAllSubject();
         try {
             while(rs.next()){
-                Object[] data = {rs.getInt("class_id"), rs.getString("name"), rs.getString("description"), 
-                    (rs.getBoolean("status") ? "Available" : "Not Available")};
+                Object[] data = {rs.getInt("subject_id"), rs.getString("name"), rs.getString("description"),              
+                    (rs.getBoolean("status") ? "Available" : "Not Available"),rs.getString("semname")};
                 tableModel.addRow(data);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ClassFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public final void loadDataForCombo(){
+        comboBoxModel.removeAllElements();
+        ResultSet rs = new SemesterDB().getAllSemester();
+        try {
+            while(rs.next()){
+                comboBoxModel.addElement(rs.getString("name"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SubjectFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
