@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -37,6 +38,7 @@ public class AttendanceFrame extends javax.swing.JFrame {
     public AttendanceFrame(Attendance atd) {
         this.atd = atd;
         initComponents();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         if(atd.isMarked()){
             jLabel4.setText("Already Rolled Up");
         }
@@ -187,17 +189,17 @@ public class AttendanceFrame extends javax.swing.JFrame {
     private void txtFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFinishActionPerformed
         // TODO add your handling code here:
         if(!atd.isMarked()){
-           atd.setMarked(true);
-           int id = new AttendanceDB().rollUp(atd);
-           atd.setAttendID(id);
-           insertStudentToAttendance();
-           JOptionPane.showMessageDialog(null, "Rolled Up Successfully!");
+            atd.setMarked(true);
+            int id = new AttendanceDB().rollUp(atd);
+            atd.setAttendID(id);
+            insertStudentToAttendance();
+            JOptionPane.showMessageDialog(null, "Rolled Up Successfully!");
         }else {
-           new AttendanceDB().deleteRolledStudent(atd);
-           insertStudentToAttendance();
-           JOptionPane.showMessageDialog(null, "Edited Student Attendance Successfully!");
+            new AttendanceDB().deleteRolledStudent(atd);
+            insertStudentToAttendance();
+            JOptionPane.showMessageDialog(null, "Edited Student Attendance Successfully!");
         }
-                   
+
     }//GEN-LAST:event_txtFinishActionPerformed
 
     /**

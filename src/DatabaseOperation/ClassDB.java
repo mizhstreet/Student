@@ -34,6 +34,20 @@ public class ClassDB {
 //        ClassDB cdb = new ClassDB();
 //        cdb.activateClass(c);
 //    }
+    public int getNumberOfClass(){
+        int i = 0;
+        String sql = "select * from class where status = 1";
+        try {
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                i++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return i;
+    }
     public int insertClass(Classes.Class dummyClass){
         int id=0;
         String insertQuery = "insert into Class"

@@ -26,6 +26,20 @@ public class SubjectDB {
     public SubjectDB() {
         conn = DBUtility.openConnection();
     }
+    public int getNumberOfSubject(){
+        int i = 0;
+        String sql = "select * from Subjects where status = 1";
+        try {
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                i++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return i;
+    }
     public int insertSubject(Subject dummySubject){
         int id = 0;
         String insertQuery = "insert into Subjects"

@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/LoginFrame.java</file>
             <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Main.java</file>
-            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Class/ClassFrame.java</file>
             <file>file:/home/mbiuu/Downloads/Student%20(1)/src/DatabaseOperation/ClassDB.java</file>
-            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Subject/ClassFrame1.java</file>
+            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Attendance/AttendanceOptions.java</file>
+            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/DatabaseOperation/SubjectDB.java</file>
+            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/DatabaseOperation/StudentDB.java</file>
         </group>
     </open-files>
 </project-private>

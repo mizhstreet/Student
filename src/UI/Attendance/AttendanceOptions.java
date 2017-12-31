@@ -212,6 +212,7 @@ public class AttendanceOptions extends javax.swing.JFrame {
                atd.setAttendID(rs.getInt("attend_id"));
                atd.setMarked(true);              
             }
+            this.setVisible(false);
             new AttendanceFrame(atd).setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(AttendanceOptions.class.getName()).log(Level.SEVERE, null, ex);

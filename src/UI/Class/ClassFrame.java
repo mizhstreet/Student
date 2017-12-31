@@ -30,6 +30,7 @@ public class ClassFrame extends javax.swing.JFrame {
      */
     public ClassFrame() {
         initComponents();
+        this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
         txtClassID.setEditable(false);
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");

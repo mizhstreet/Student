@@ -35,6 +35,7 @@ public class SubjectFrame extends javax.swing.JFrame {
      */
     public SubjectFrame() {
         initComponents();
+        this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
         txtSubjectId.setEditable(false);
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");

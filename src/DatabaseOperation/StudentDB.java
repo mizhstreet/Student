@@ -50,6 +50,20 @@ public class StudentDB {
     public StudentDB() {
         conn = DBUtility.openConnection();
     }
+    public int getNumberOfStudent(){
+        int i = 0;
+        String sql = "select * from Students where status =1";
+        try {
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                i++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return i;
+    }
     public boolean insertStudent(Student dummyStudent, Classes.Class dummyClass){
         boolean check = false;
         String insertQuery = "insert into Students"
