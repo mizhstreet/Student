@@ -28,10 +28,11 @@ public class ExamDB {
         String insertQuery = "insert into Student"
                     + " values('"
                     + dummyExam.getExam_date()
-                    + "'," + dummyExam.getName()+ ""
-                    + ",'" + dummyExam.getSubject_id()+ "'"
-                    + ",'" + dummyExam.getCondition()+ "'"
-                    + ",'" + dummyExam.getClass_id()+ "'"
+                    + "'," + dummyExam.getName()+ "'"
+                    + "," + dummyExam.getSubject_id()+ ""
+                    + "," + dummyExam.getCondition()+ ""
+                    + "," + dummyExam.getClass_id()+ ""
+                    + "," + dummyExam.getTotalmark()+ ""
                     + ")";
         try {
             pstmt = conn.prepareStatement(insertQuery);
@@ -53,5 +54,18 @@ public class ExamDB {
         } catch (SQLException ex) {
             Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    public ResultSet getAllExamByClassID(int classID){
+        String sql = "Select exam_id, s.name as subject_name, e.name, condition,totalmark, exam_date "
+                + "from exam e inner join "
+                + "Subjects s on e.subject_id = s.subject_id where class_id="+classID;
+        try {
+            System.out.println(sql);
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
     }
 }

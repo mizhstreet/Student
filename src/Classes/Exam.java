@@ -18,6 +18,16 @@ public class Exam {
     private int subject_id;
     private int condition;
     private int class_id;
+    private int totalmark;
+
+    public int getTotalmark() {
+        return totalmark;
+    }
+
+    public void setTotalmark(int totalmark) {
+        this.totalmark = totalmark;
+    }
+    
 
     public int getClass_id() {
         return class_id;
