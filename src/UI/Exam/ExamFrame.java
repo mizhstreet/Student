@@ -266,7 +266,6 @@ public class ExamFrame extends javax.swing.JFrame {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
           // Item was just selected
           tableModel.setRowCount(0);
-            System.out.println("changed");
             loadDataForTable();
 //            System.out.println(item.toString());
         } else if (evt.getStateChange() == ItemEvent.DESELECTED) {

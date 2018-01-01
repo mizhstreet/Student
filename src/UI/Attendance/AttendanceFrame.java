@@ -46,19 +46,48 @@ public class AttendanceFrame extends javax.swing.JFrame {
         Classes.Class c = new Classes.Class();
         c.setClassID(atd.getClassID());
         jLabel3.setText(new ClassDB().getClassNameByID(atd.getClassID()));
-        ResultSet rs = sdb.getAllStudentInClass(c);
-        try {
-            while(rs.next()){
-                Student minh = new Student();
-                minh.setFname(rs.getString("fname"));
-                minh.setLname(rs.getString("lname"));
-                minh.setRollNo(rs.getString("rollno"));
-                minh.setRollUpStatus(new RollUpStatus("P"));
-                minh.setStudentId(rs.getInt("sid"));
-                listPerson.add(minh);
+        if(atd.isMarked() == true){
+            ResultSet rs = sdb.getAllStudentInClassWithAttendance(c, atd.getAttendID());
+            try {
+                while(rs.next()){
+                    Student minh = new Student();
+                    String rollUpStatusText="";
+                    minh.setFname(rs.getString("fname"));
+                    minh.setLname(rs.getString("lname"));
+                    minh.setRollNo(rs.getString("rollno"));            
+                    switch(rs.getInt("attendstatus")){
+                        case 1: 
+                           rollUpStatusText = "P";
+                           break;
+                        case 2:
+                           rollUpStatusText = "PA";
+                           break;
+                        case 0: 
+                            rollUpStatusText = "A";
+                            break;
+                    }
+                    minh.setRollUpStatus(new RollUpStatus(rollUpStatusText));
+                    minh.setStudentId(rs.getInt("sid"));
+                    listPerson.add(minh);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(AttendanceFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(AttendanceFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }else {
+            ResultSet rs = sdb.getAllStudentInClass(c);
+            try {
+                while(rs.next()){
+                    Student minh = new Student();
+                    minh.setFname(rs.getString("fname"));
+                    minh.setLname(rs.getString("lname"));
+                    minh.setRollNo(rs.getString("rollno"));                               
+                    minh.setRollUpStatus(new RollUpStatus("P"));
+                    minh.setStudentId(rs.getInt("sid"));
+                    listPerson.add(minh);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(AttendanceFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
                 
         tableModel = new AttendanceTableModel(listPerson);

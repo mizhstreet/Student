@@ -161,6 +161,21 @@ public class StudentDB {
         }
         return rs;
     }
+    public ResultSet getAllStudentInClassWithAttendance(Classes.Class dummyClass,int attendID){
+        String query = "select s.student_id as sid, fname, rollno, "
+                + "lname, attendstatus, dob, phone, joined_date, address "
+                + "from Students s inner join Class_Student on s.student_id = Class_Student.student_id "
+                + "inner join Class c on Class_Student.class_id = c.class_id inner join Attendance_student a on"
+                + " s.student_id = a.student_id"
+                + " where c.class_id =" + dummyClass.getClassID()+ " and attend_id="+attendID;
+        try {
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
     public ResultSet getAllStudent(){
         String query = "select s.student_id as sid, fname, c.name as className"
                 + "lname, dob, phone, joined_date, address "

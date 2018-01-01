@@ -60,7 +60,7 @@ public class ExamDB {
                 + "from exam e inner join "
                 + "Subjects s on e.subject_id = s.subject_id where class_id="+classID;
         try {
-            System.out.println(sql);
+//            System.out.println(sql);
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
         } catch (SQLException ex) {
