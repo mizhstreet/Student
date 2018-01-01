@@ -45,3 +45,10 @@ Insert Into Subject_Sessions values(1, 'Java I Lab 7')
 
 Insert Into Class values('C1603M', 'Dang hoc ki 2',1)
 Insert Into Class values('C1606M', 'Dang hoc ki 1',1)
+
+----New commit ---------
+Alter table Exam add totalmark int
+
+insert into Exam values('2017-12-12','Thi Java 1 li thuyet',1,40,1,20)
+
+
