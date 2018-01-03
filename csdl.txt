@@ -1,3 +1,6 @@
+create database StudentManagement
+
+use StudentManagement
 
 create table admin (id int identity primary key, username varchar(100), password text, status bit)
 
@@ -27,7 +30,7 @@ insert into Semester values ('Ki III')
 insert into Semester values ('Ki IV')
 
 
-----New Commit -------
+
 Insert into Subjects values('Java I',2,'None',1)
 Insert into Subjects values('Java II',2,'None',1)
 Insert into Subjects values('AD Java I',2,'None',1)
@@ -45,8 +48,11 @@ Insert Into Subject_Sessions values(1, 'Java I Lab 7')
 
 Insert Into Class values('C1603M', 'Dang hoc ki 2',1)
 Insert Into Class values('C1606M', 'Dang hoc ki 1',1)
+Insert Into Class values('C1703L', 'Dang hoc ki 1',1)
+Insert Into Class values('PH1709M', 'Dang hoc PHP',1)
 
-----New commit ---------
+Insert Into Admin values('admin','admin',1)
+
 Alter table Exam add totalmark int
 
 insert into Exam values('2017-12-12','Thi Java 1 li thuyet',1,40,1,20)

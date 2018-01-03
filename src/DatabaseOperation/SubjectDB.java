@@ -40,6 +40,20 @@ public class SubjectDB {
         }
         return i;
     }
+    public int getSubjectNameBySubjectID(String name){
+        int subjectID =0;
+        String sql = "select * from Subjects where name ='"+name+"'";
+        try {
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                subjectID = rs.getInt("subject_id");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return subjectID;
+    }
     public int insertSubject(Subject dummySubject){
         int id = 0;
         String insertQuery = "insert into Subjects"

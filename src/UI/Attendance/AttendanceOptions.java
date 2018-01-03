@@ -12,6 +12,8 @@ import DatabaseOperation.AttendanceDB;
 import DatabaseOperation.ClassDB;
 import DatabaseOperation.SubjectDB;
 import DatabaseOperation.SubjectSessionDB;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,6 +35,8 @@ public class AttendanceOptions extends javax.swing.JFrame {
      */
     public AttendanceOptions() {
         initComponents();
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         cboClassModel = new DefaultComboBoxModel<>();
         cboClass.setModel(cboClassModel);
         cboSubjectModel = new DefaultComboBoxModel<>();

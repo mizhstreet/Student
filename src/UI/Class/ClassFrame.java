@@ -252,6 +252,7 @@ public class ClassFrame extends javax.swing.JFrame {
 
         jScrollPane1.setBackground(new java.awt.Color(254, 254, 254));
 
+        jTable1.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -263,6 +264,7 @@ public class ClassFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setRowHeight(25);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);

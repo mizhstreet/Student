@@ -5,6 +5,7 @@
  */
 package UI.Exam;
 
+import Classes.Exam;
 import Classes.Subject;
 import DatabaseOperation.ClassDB;
 import DatabaseOperation.ExamDB;
@@ -13,11 +14,14 @@ import UI.Attendance.AttendanceOptions;
 import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,11 +30,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ExamFrame extends javax.swing.JFrame {
     DefaultComboBoxModel<Classes.Class> cboClassModel;
-    DefaultComboBoxModel<Subject> cboSubjectModel;
+    DefaultComboBoxModel<String> cboSubjectModel;
     ArrayList<Subject> listSubject;
     ArrayList<Classes.Class> listClass;
     DefaultTableModel tableModel;
-    
+    private boolean btnAddDisabled = false;
+    private boolean btnEditDisabled = true;
     /**
      * Creates new form ExamFrame
      */
@@ -40,7 +45,7 @@ public class ExamFrame extends javax.swing.JFrame {
         cboSubjectModel = new DefaultComboBoxModel<>();
         tableModel = new DefaultTableModel();
         jComboBox1.setModel(cboClassModel);
-        jComboBox2.setModel(cboSubjectModel);
+        cboSubject.setModel(cboSubjectModel);
         loadClassForCombo();
         loadSubjectForCombo();
         tableModel = new DefaultTableModel();
@@ -50,7 +55,7 @@ public class ExamFrame extends javax.swing.JFrame {
         tableModel.addColumn("Total marks");
         tableModel.addColumn("Condition");
         tableModel.addColumn("Subject name");
-        jTable1.setModel(tableModel);
+        TblExam.setModel(tableModel);
         loadDataForTable();
     }
 
@@ -64,72 +69,132 @@ public class ExamFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtExamID = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtExamName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        txtDate = new javax.swing.JTextField();
+        txtCondition = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txtTotalMark = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox();
+        cboSubject = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TblExam = new javax.swing.JTable();
+        btnAdd = new javax.swing.JLabel();
+        btnEdit = new javax.swing.JLabel();
+        btnClear = new javax.swing.JLabel();
+        btnManageMark = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(110, 89, 222));
 
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-test-passed-50.png"))); // NOI18N
+
+        jLabel9.setFont(new java.awt.Font("Miriam Mono CLM", 1, 24)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(254, 254, 254));
+        jLabel9.setText("Exam Management");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(jLabel8)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel9)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
+        jPanel2.setBackground(new java.awt.Color(254, 254, 254));
+
+        jPanel3.setBackground(new java.awt.Color(254, 254, 254));
+
+        jLabel1.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(99, 78, 254));
         jLabel1.setText("Exam ID");
 
-        jTextField1.setText("jTextField1");
+        txtExamID.setEditable(false);
+        txtExamID.setBackground(new java.awt.Color(254, 254, 254));
+        txtExamID.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        txtExamID.setText("*");
+        txtExamID.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(99, 78, 254), 2));
 
+        jLabel2.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(99, 78, 254));
         jLabel2.setText("ExamName");
 
-        jTextField2.setText("jTextField1");
+        txtExamName.setBackground(new java.awt.Color(254, 254, 254));
+        txtExamName.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        txtExamName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(99, 78, 254), 2));
 
+        jLabel3.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(99, 78, 254));
         jLabel3.setText("Date");
 
-        jTextField3.setText("jTextField1");
+        txtDate.setBackground(new java.awt.Color(254, 254, 254));
+        txtDate.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        txtDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(99, 78, 254), 2));
 
-        jTextField4.setText("jTextField1");
+        txtCondition.setBackground(new java.awt.Color(254, 254, 254));
+        txtCondition.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        txtCondition.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(99, 78, 254), 2));
 
+        jLabel4.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(99, 78, 254));
         jLabel4.setText("Condition");
 
-        jTextField5.setText("jTextField1");
+        txtTotalMark.setBackground(new java.awt.Color(254, 254, 254));
+        txtTotalMark.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        txtTotalMark.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(99, 78, 254), 2));
 
+        jLabel5.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(99, 78, 254));
         jLabel5.setText("Total marks");
 
+        jLabel6.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(99, 78, 254));
         jLabel6.setText("Subject");
 
+        jLabel7.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(99, 78, 254));
         jLabel7.setText("Class");
 
+        jComboBox1.setBackground(new java.awt.Color(254, 254, 254));
+        jComboBox1.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(99, 78, 254), 2, true));
         jComboBox1.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBox1ItemStateChanged(evt);
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboSubject.setBackground(new java.awt.Color(254, 254, 254));
+        cboSubject.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        cboSubject.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboSubject.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(99, 78, 254), 2, true));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -141,22 +206,22 @@ public class ExamFrame extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtExamID, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 196, Short.MAX_VALUE)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 222, Short.MAX_VALUE)
+                        .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 166, Short.MAX_VALUE)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                            .addComponent(txtExamName, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                             .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,16 +229,16 @@ public class ExamFrame extends javax.swing.JFrame {
                             .addComponent(jLabel6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(txtTotalMark, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                            .addComponent(cboSubject, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(34, 34, 34))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(27, 27, 27)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtExamID, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -182,30 +247,37 @@ public class ExamFrame extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtExamName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(21, 21, 21)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(21, 21, 21)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTotalMark, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(227, Short.MAX_VALUE))
+                    .addComponent(cboSubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(209, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPane1MouseClicked(evt);
+            }
+        });
+
+        TblExam.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        TblExam.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -216,7 +288,40 @@ public class ExamFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        TblExam.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TblExamMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TblExam);
+
+        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_add.png"))); // NOI18N
+        btnAdd.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAddMouseClicked(evt);
+            }
+        });
+
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_edit (2).png"))); // NOI18N
+        btnEdit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEditMouseClicked(evt);
+            }
+        });
+
+        btnClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_clear.png"))); // NOI18N
+        btnClear.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnClearMouseClicked(evt);
+            }
+        });
+
+        btnManageMark.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_manage-mark (1).png"))); // NOI18N
+        btnManageMark.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnManageMarkMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -226,16 +331,32 @@ public class ExamFrame extends javax.swing.JFrame {
                 .addGap(35, 35, 35)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(btnAdd)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEdit)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnClear)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnManageMark, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 28, Short.MAX_VALUE))
+                .addGap(0, 7, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(21, 21, 21)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnAdd)
+                    .addComponent(btnEdit)
+                    .addComponent(btnClear)
+                    .addComponent(btnManageMark))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -273,6 +394,121 @@ public class ExamFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jComboBox1ItemStateChanged
 
+    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+
+    }//GEN-LAST:event_jScrollPane1MouseClicked
+
+    private void TblExamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TblExamMouseClicked
+        // TODO add your handling code here:
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_edit.png")));
+        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_add (2).png")));        
+        btnManageMark.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_manage-mark.png"))); 
+        btnAddDisabled = true;
+        btnEditDisabled = false;
+        int row = TblExam.getSelectedRow();
+        txtExamID.setText(TblExam.getValueAt(row, 0)+"");
+        txtExamName.setText(TblExam.getValueAt(row, 1)+"");
+        txtDate.setText(TblExam.getValueAt(row, 2)+"");
+        txtCondition.setText(TblExam.getValueAt(row, 4)+"");
+        txtTotalMark.setText(TblExam.getValueAt(row, 3)+"");
+        cboSubject.setSelectedItem(TblExam.getValueAt(row, 5)+"");
+    }//GEN-LAST:event_TblExamMouseClicked
+
+    private void btnAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMouseClicked
+        // TODO add your handling code here:
+        if(btnAddDisabled == true){
+            
+        }
+        else if("".equals(txtExamName.getText()) || "".equals(txtCondition.getText())){
+            JOptionPane.showMessageDialog(null, "Please fill up the form first!");
+        }else{
+            Exam e = new Exam();
+            e.setClass_id(new ClassDB().getClassIDByClassName(jComboBox1.getSelectedItem().toString()));
+            e.setCondition(Integer.parseInt(txtCondition.getText()));
+            e.setTotalmark(Integer.parseInt(txtTotalMark.getText()));
+            e.setName(txtExamName.getText());
+            e.setSubject_id(new SubjectDB().getSubjectNameBySubjectID(cboSubject.getSelectedItem().toString()));
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                e.setExam_date(new java.sql.Date(date.parse(txtDate.getText()).getTime()));
+            } catch (ParseException ex) {
+                Logger.getLogger(ExamFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int eID = new ExamDB().insertExam(e);
+            JOptionPane.showMessageDialog(null, "Inserted Succesfully!");
+            txtExamID.setText(eID+"");
+            loadDataForTable();
+        }
+    }//GEN-LAST:event_btnAddMouseClicked
+
+    private void btnClearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClearMouseClicked
+        // TODO add your handling code here:
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_edit (2).png")));
+        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_add.png")));        
+        btnManageMark.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/button_manage-mark (1).png"))); 
+        btnAddDisabled = false;
+        btnEditDisabled = true;
+        TblExam.removeRowSelectionInterval(0, TblExam.getRowCount()-1);
+        txtExamID.setText("*");
+        txtDate.setText("");
+        txtExamName.setText("");
+        txtCondition.setText("");
+        txtTotalMark.setText("");        
+    }//GEN-LAST:event_btnClearMouseClicked
+
+    private void btnEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseClicked
+        // TODO add your handling code here:
+        if(btnEditDisabled == true){
+            
+        }else if("".equals(txtExamName.getText()) || "".equals(txtTotalMark.getText())){
+            JOptionPane.showMessageDialog(null, "Please fill up the form first!");
+        }else{
+            Exam e = new Exam();
+            int row = TblExam.getSelectedRow();
+            e.setClass_id(new ClassDB().getClassIDByClassName(jComboBox1.getSelectedItem().toString()));
+            e.setCondition(Integer.parseInt(txtCondition.getText()));
+            e.setTotalmark(Integer.parseInt(txtTotalMark.getText()));
+            e.setName(txtExamName.getText());
+            e.setSubject_id(new SubjectDB().getSubjectNameBySubjectID(cboSubject.getSelectedItem().toString()));
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                e.setExam_date(new java.sql.Date(date.parse(txtDate.getText()).getTime()));
+            } catch (ParseException ex) {
+                Logger.getLogger(ExamFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            e.setExam_id(Integer.parseInt(txtExamID.getText()));
+            new ExamDB().editExam(e);
+            JOptionPane.showMessageDialog(null, "Edited Successfully!");
+            TblExam.setValueAt(txtExamID.getText(), row, 0);
+            TblExam.setValueAt(txtExamName.getText(), row, 1);
+            TblExam.setValueAt(txtDate.getText(), row, 2);
+            TblExam.setValueAt(txtTotalMark.getText(), row, 3);            
+            TblExam.setValueAt(txtCondition.getText(), row, 4);
+            TblExam.setValueAt(cboSubject.getSelectedItem().toString(), row, 5);
+        }
+    }//GEN-LAST:event_btnEditMouseClicked
+
+    private void btnManageMarkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnManageMarkMouseClicked
+        // TODO add your handling code here:
+        if(btnEditDisabled == false){
+            Exam e = new Exam();
+            int row = TblExam.getSelectedRow();
+            e.setClass_id(new ClassDB().getClassIDByClassName(jComboBox1.getSelectedItem().toString()));
+            e.setCondition(Integer.parseInt(txtCondition.getText()));
+            e.setTotalmark(Integer.parseInt(txtTotalMark.getText()));
+            e.setName(txtExamName.getText());
+            e.setSubject_id(new SubjectDB().getSubjectNameBySubjectID(cboSubject.getSelectedItem().toString()));
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                e.setExam_date(new java.sql.Date(date.parse(txtDate.getText()).getTime()));
+            } catch (ParseException ex) {
+                Logger.getLogger(ExamFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            e.setExam_id(Integer.parseInt(txtExamID.getText()));  
+            new MarkFrame(e,true).setVisible(true);
+        }
+    }//GEN-LAST:event_btnManageMarkMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -301,16 +537,19 @@ public class ExamFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ExamFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ExamFrame().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TblExam;
+    private javax.swing.JLabel btnAdd;
+    private javax.swing.JLabel btnClear;
+    private javax.swing.JLabel btnEdit;
+    private javax.swing.JLabel btnManageMark;
+    private javax.swing.JComboBox<String> cboSubject;
     private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -318,18 +557,19 @@ public class ExamFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField txtCondition;
+    private javax.swing.JTextField txtDate;
+    private javax.swing.JTextField txtExamID;
+    private javax.swing.JTextField txtExamName;
+    private javax.swing.JTextField txtTotalMark;
     // End of variables declaration//GEN-END:variables
-    public void loadClassForCombo(){
+    private void loadClassForCombo(){
         ResultSet rs;
         ClassDB classDB = new ClassDB();
         cboClassModel.removeAllElements();
@@ -355,7 +595,7 @@ public class ExamFrame extends javax.swing.JFrame {
                 Subject s = new Subject();
                 s.setSubject_id(rs.getInt("subject_id"));
                 s.setName(rs.getString("name"));
-                cboSubjectModel.addElement(s);
+                cboSubjectModel.addElement(s.getName());
             }
         } catch (SQLException ex) {
             Logger.getLogger(ExamFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -370,8 +610,6 @@ public class ExamFrame extends javax.swing.JFrame {
                 Object[] data ={rs.getInt("exam_id"), rs.getString("name"), 
                     rs.getString("exam_date"), rs.getInt("totalmark"), 
                     rs.getInt("condition"), rs.getString("subject_name")};
-                System.out.println(rs.getInt("exam_id"));
-                Object[] data1 = {1,"Java 1","213123","200","13","JavI"};
                 tableModel.addRow(data);
             }
         } catch (SQLException ex) {

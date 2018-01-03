@@ -5,6 +5,7 @@
  */
 package DatabaseOperation;
 
+import Classes.Exam;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -112,6 +113,19 @@ public class StudentDB {
         }
         return false;
     }
+    public ResultSet getAllMarkOfStudentByRollNo(String rollNo){
+        String sql = "select e.name as examname, condition, er.mark, er.remark, e.totalmark from Students s inner join "
+                + "Exam_Result er on s.student_id = er.student_id "
+                + "inner join Exam e on er.exam_id = e.exam_id where s.rollno='"+rollNo+"'";
+        try {
+            System.out.println(sql);
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
     public void editStudent(Student dummyStudent,String roll){
         String updateQuery ="update Students set rollno='"
                     +dummyStudent.getRollNo()+"', fname = '"
@@ -153,6 +167,16 @@ public class StudentDB {
                 + "lname, dob, phone, joined_date, address "
                 + "from Students s inner join Class_Student on s.student_id = Class_Student.student_id "
                 + "inner join Class c on Class_Student.class_id = c.class_id where c.class_id =" + dummyClass.getClassID();
+        try {
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
+    public ResultSet getStudentHasMark(Exam e){
+        String query = "Select * from Exam_result where exam_id="+e.getExam_id();
         try {
             pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();

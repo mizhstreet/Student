@@ -35,7 +35,7 @@ public class SubjectFrame extends javax.swing.JFrame {
      */
     public SubjectFrame() {
         initComponents();
-        this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(SubjectFrame.DISPOSE_ON_CLOSE);
         txtSubjectId.setEditable(false);
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
@@ -510,10 +510,8 @@ public class SubjectFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SubjectFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new SubjectFrame().setVisible(true);
         });
     }
 
