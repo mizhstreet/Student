@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 /**
  *
  * @author mbiuu
@@ -46,7 +47,9 @@ public class ExamDB {
             while(rs.next()){
                 id = rs.getInt(1);
             }
+            JOptionPane.showMessageDialog(null, "Exam inserted successfully!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Exam inserted failed!");
             Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return id;
@@ -62,7 +65,9 @@ public class ExamDB {
         try {
             pstmt = conn.prepareStatement(updateQuery);
             pstmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Edited Successfully!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Edit Failed!");
             Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -71,10 +76,10 @@ public class ExamDB {
                 + "from exam e inner join "
                 + "Subjects s on e.subject_id = s.subject_id where class_id="+classID;
         try {
-//            System.out.println(sql);
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Cannot get all exams of this class!");
             Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return rs;
@@ -85,6 +90,7 @@ public class ExamDB {
             pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Failed!");
             Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -98,7 +104,9 @@ public class ExamDB {
                 stmt.addBatch(sql);
             }
             stmt.executeBatch();
+            JOptionPane.showMessageDialog(null, "Done!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Failed!");
             Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         

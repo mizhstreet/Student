@@ -10,6 +10,7 @@ import DatabaseOperation.StudentDB;
 import DatabaseOperation.SubjectDB;
 import UI.Attendance.AttendanceOptions;
 import UI.Class.ClassFrame;
+import UI.Exam.ExamFrame;
 import UI.Mark.InputRollnoFrame;
 import UI.Student.StudentFrame;
 import UI.Subject.SubjectFrame;
@@ -108,7 +109,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Cantarell", 1, 21)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Student");
 
@@ -150,7 +151,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Cantarell", 1, 21)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Attendance");
 
@@ -192,7 +193,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jLabel9.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Cantarell", 1, 21)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Marks");
 
@@ -234,7 +235,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jLabel11.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Cantarell", 1, 21)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Subjects");
 
@@ -276,7 +277,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel13.setFont(new java.awt.Font("Cantarell", 1, 21)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Class");
 
@@ -307,6 +308,9 @@ public class Main extends javax.swing.JFrame {
 
         jPanel8.setBackground(new java.awt.Color(54, 33, 89));
         jPanel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel8MouseClicked(evt);
+            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 jPanel8MouseExited(evt);
             }
@@ -315,7 +319,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jLabel15.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel15.setFont(new java.awt.Font("Cantarell", 1, 21)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("Exam");
 
@@ -357,7 +361,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jLabel28.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
+        jLabel28.setFont(new java.awt.Font("Cantarell", 1, 21)); // NOI18N
         jLabel28.setForeground(new java.awt.Color(255, 255, 255));
         jLabel28.setText("Sign out");
 
@@ -416,15 +420,15 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -737,6 +741,11 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         new InputRollnoFrame().setVisible(true);
     }//GEN-LAST:event_jPanel5MouseClicked
+
+    private void jPanel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel8MouseClicked
+        // TODO add your handling code here:
+        new ExamFrame().setVisible(true);
+    }//GEN-LAST:event_jPanel8MouseClicked
 
     /**
      * @param args the command line arguments

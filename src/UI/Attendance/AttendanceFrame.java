@@ -222,11 +222,9 @@ public class AttendanceFrame extends javax.swing.JFrame {
             int id = new AttendanceDB().rollUp(atd);
             atd.setAttendID(id);
             insertStudentToAttendance();
-            JOptionPane.showMessageDialog(null, "Rolled Up Successfully!");
         }else {
             new AttendanceDB().deleteRolledStudent(atd);
             insertStudentToAttendance();
-            JOptionPane.showMessageDialog(null, "Edited Student Attendance Successfully!");
         }
 
     }//GEN-LAST:event_txtFinishActionPerformed

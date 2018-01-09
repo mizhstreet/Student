@@ -10,13 +10,14 @@ import Classes.Subject;
 import DatabaseOperation.ClassDB;
 import DatabaseOperation.ExamDB;
 import DatabaseOperation.SubjectDB;
-import UI.Attendance.AttendanceOptions;
 import java.awt.event.ItemEvent;
+import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -41,6 +42,7 @@ public class ExamFrame extends javax.swing.JFrame {
      */
     public ExamFrame() {
         initComponents();
+        this.setDefaultCloseOperation(ExamFrame.DISPOSE_ON_CLOSE);
         cboClassModel = new DefaultComboBoxModel<>();
         cboSubjectModel = new DefaultComboBoxModel<>();
         tableModel = new DefaultTableModel();
@@ -87,6 +89,7 @@ public class ExamFrame extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         cboSubject = new javax.swing.JComboBox<>();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
         TblExam = new javax.swing.JTable();
         btnAdd = new javax.swing.JLabel();
@@ -124,7 +127,7 @@ public class ExamFrame extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(13, 13, 13)
                         .addComponent(jLabel9)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(254, 254, 254));
@@ -153,6 +156,7 @@ public class ExamFrame extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(99, 78, 254));
         jLabel3.setText("Date");
 
+        txtDate.setEditable(false);
         txtDate.setBackground(new java.awt.Color(254, 254, 254));
         txtDate.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
         txtDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(99, 78, 254), 2));
@@ -196,6 +200,14 @@ public class ExamFrame extends javax.swing.JFrame {
         cboSubject.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cboSubject.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(99, 78, 254), 2, true));
 
+        jDateChooser1.setBackground(new java.awt.Color(254, 254, 254));
+        jDateChooser1.setBorder(null);
+        jDateChooser1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooser1PropertyChange(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -231,31 +243,36 @@ public class ExamFrame extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtTotalMark, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                             .addComponent(cboSubject, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(34, 34, 34))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtExamID, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabel7))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtExamName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(21, 21, 21)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(21, 21, 21)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtExamID, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addComponent(jLabel7))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtExamName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
@@ -267,7 +284,7 @@ public class ExamFrame extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(cboSubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(209, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
 
         jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -332,7 +349,7 @@ public class ExamFrame extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btnAdd)
                         .addGap(18, 18, 18)
@@ -416,12 +433,9 @@ public class ExamFrame extends javax.swing.JFrame {
 
     private void btnAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMouseClicked
         // TODO add your handling code here:
-        if(btnAddDisabled == true){
-            
+        if(btnAddDisabled == true){           
         }
-        else if("".equals(txtExamName.getText()) || "".equals(txtCondition.getText())){
-            JOptionPane.showMessageDialog(null, "Please fill up the form first!");
-        }else{
+        else if(validateForm()){
             Exam e = new Exam();
             e.setClass_id(new ClassDB().getClassIDByClassName(jComboBox1.getSelectedItem().toString()));
             e.setCondition(Integer.parseInt(txtCondition.getText()));
@@ -435,9 +449,11 @@ public class ExamFrame extends javax.swing.JFrame {
                 Logger.getLogger(ExamFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
             int eID = new ExamDB().insertExam(e);
-            JOptionPane.showMessageDialog(null, "Inserted Succesfully!");
             txtExamID.setText(eID+"");
-            loadDataForTable();
+//            loadDataForTable();
+            Object[] data = {eID, jComboBox1.getSelectedItem()+"",
+                txtDate.getText(),e.getTotalmark(),e.getCondition(),cboSubject.getSelectedItem()+""};
+            tableModel.addRow(data);
         }
     }//GEN-LAST:event_btnAddMouseClicked
 
@@ -460,9 +476,7 @@ public class ExamFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(btnEditDisabled == true){
             
-        }else if("".equals(txtExamName.getText()) || "".equals(txtTotalMark.getText())){
-            JOptionPane.showMessageDialog(null, "Please fill up the form first!");
-        }else{
+        }else if(validateForm()){
             Exam e = new Exam();
             int row = TblExam.getSelectedRow();
             e.setClass_id(new ClassDB().getClassIDByClassName(jComboBox1.getSelectedItem().toString()));
@@ -478,7 +492,6 @@ public class ExamFrame extends javax.swing.JFrame {
             }
             e.setExam_id(Integer.parseInt(txtExamID.getText()));
             new ExamDB().editExam(e);
-            JOptionPane.showMessageDialog(null, "Edited Successfully!");
             TblExam.setValueAt(txtExamID.getText(), row, 0);
             TblExam.setValueAt(txtExamName.getText(), row, 1);
             TblExam.setValueAt(txtDate.getText(), row, 2);
@@ -508,6 +521,18 @@ public class ExamFrame extends javax.swing.JFrame {
             new MarkFrame(e,true).setVisible(true);
         }
     }//GEN-LAST:event_btnManageMarkMouseClicked
+
+    private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser1PropertyChange
+        // TODO add your handling code here:
+        if ("date".equals(evt.getPropertyName())) {
+            //Get the selected date 
+            Date date = jDateChooser1.getDateEditor().getDate();
+            SimpleDateFormat print = new SimpleDateFormat("yyyy-MM-dd");
+            txtDate.setText(print.format(date));
+        } else {
+            
+        }
+    }//GEN-LAST:event_jDateChooser1PropertyChange
 
     /**
      * @param args the command line arguments
@@ -550,6 +575,7 @@ public class ExamFrame extends javax.swing.JFrame {
     private javax.swing.JLabel btnManageMark;
     private javax.swing.JComboBox<String> cboSubject;
     private javax.swing.JComboBox jComboBox1;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -615,5 +641,22 @@ public class ExamFrame extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(ExamFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    private boolean validateForm(){
+        boolean isValidated = false;
+        if("".equals(txtExamName.getText()) || "".equals(txtDate.getText()) || 
+                "".equals(txtCondition.getText()) || "".equals(txtTotalMark.getText())){
+            JOptionPane.showMessageDialog(null, "Please fill up the form first!");
+        }
+        else if(Integer.parseInt(txtCondition.getText())<=0 || Integer.parseInt(txtCondition.getText()) > 100){
+            JOptionPane.showMessageDialog(null, "Condition must be greater than 0 and smaller than 100!");            
+        }
+        else if(Integer.parseInt(txtTotalMark.getText())<=0){
+            JOptionPane.showMessageDialog(null, "Total mark cannot be smaller than 0!");
+        }
+        else{
+            isValidated = true;
+        }
+        return isValidated;
     }
 }

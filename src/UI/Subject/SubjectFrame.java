@@ -436,7 +436,7 @@ public class SubjectFrame extends javax.swing.JFrame {
             c.setStatus(classStatus);
             c.setSemId((byte) (cboSemester.getSelectedIndex()+1));
             int cID = new SubjectDB().insertSubject(c);
-            JOptionPane.showMessageDialog(null, "Inserted Succesfully!");
+            
             txtSubjectId.setText(cID+"");
             Object data[] = {cID, c.getName(), c.getDescription(), (c.isStatus() ? "Available" : "Not Available"), cboSemester.getSelectedItem()+""};
             tableModel.addRow(data);
@@ -471,8 +471,7 @@ public class SubjectFrame extends javax.swing.JFrame {
             c.setStatus(classStatus);
             c.setSemId((byte) (cboSemester.getSelectedIndex()+1));
             c.setSubject_id(Integer.parseInt(txtSubjectId.getText()));
-            new SubjectDB().updateSubject(c);
-            JOptionPane.showMessageDialog(null, "Edited Successfully!");
+            new SubjectDB().updateSubject(c);            
             int row = jTable1.getSelectedRow();
             jTable1.setValueAt(txtSubjectName.getText(), row, 1);
             jTable1.setValueAt(txaDescription.getText(), row, 2);

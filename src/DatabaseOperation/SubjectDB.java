@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -70,7 +71,9 @@ public class SubjectDB {
             while(rs.next()){
                 id = rs.getInt(1);
             }
+            JOptionPane.showMessageDialog(null, "Inserted Succesfully!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Inserted Failed!");
             Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
         }  
         return id;
@@ -94,7 +97,9 @@ public class SubjectDB {
         try {
             pstmt = conn.prepareStatement(query);
             pstmt.execute();
+            JOptionPane.showMessageDialog(null, "Edited Successfully!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Edited Failed!");
             Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

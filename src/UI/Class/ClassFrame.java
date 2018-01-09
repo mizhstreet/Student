@@ -30,7 +30,7 @@ public class ClassFrame extends javax.swing.JFrame {
      */
     public ClassFrame() {
         initComponents();
-        this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(ClassFrame.DISPOSE_ON_CLOSE);
         txtClassID.setEditable(false);
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
@@ -402,7 +402,6 @@ public class ClassFrame extends javax.swing.JFrame {
             c.setDescription(txaDescription.getText());
             c.setStatus(classStatus);
             int cID = new ClassDB().insertClass(c);
-            JOptionPane.showMessageDialog(null, "Inserted Succesfully!");
             txtClassID.setText(cID+"");
             Object data[] = {cID, c.getName(), c.getDescription(), (c.isStatus() ? "Available" : "Not Available")};
             tableModel.addRow(data);
@@ -437,7 +436,6 @@ public class ClassFrame extends javax.swing.JFrame {
             c.setStatus(classStatus);
             c.setClassID(Integer.parseInt(txtClassID.getText()));
             new ClassDB().updateClass(c);
-            JOptionPane.showMessageDialog(null, "Edited Successfully!");
             int row = jTable1.getSelectedRow();
             jTable1.setValueAt(txtClassName.getText(), row, 1);
             jTable1.setValueAt(txaDescription.getText(), row, 2);
@@ -473,10 +471,8 @@ public class ClassFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ClassFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ClassFrame().setVisible(true);
         });
     }
 
@@ -505,7 +501,7 @@ public class ClassFrame extends javax.swing.JFrame {
     private javax.swing.JTextField txtClassName;
     // End of variables declaration//GEN-END:variables
 
-    public void loadDataForTable(){
+    public final void loadDataForTable(){
         ResultSet rs = new ClassDB().getAllClass();
         try {
             while(rs.next()){

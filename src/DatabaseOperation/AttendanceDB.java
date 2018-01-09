@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -54,7 +55,6 @@ public class AttendanceDB {
                 + "subject_sessions s on a.session_id = s.session_id "
                 + "where c.name ='"+className+"' and s.name ='"+sessionName+"'";
         try {
-            System.out.println(sql);
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
         } catch (SQLException ex) {
@@ -63,12 +63,12 @@ public class AttendanceDB {
         return rs;
     }
     public void rollUpStudent(String sql){
-//        String sql = "Insert into Attendance_student set attendstatus="+stt+" where"
-//                + " attend_id ="+dummyAttendance.getAttendID()+" AND student_id="+dummyStudent.getStudentId();      
         try {
             pstmt = conn.prepareStatement(sql);
-             pstmt.execute();
+            pstmt.execute();
+            JOptionPane.showMessageDialog(null, "Rolled Up Succesfully!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Rolled Up Failed!");
             Logger.getLogger(AttendanceDB.class.getName()).log(Level.SEVERE, null, ex);
         }       
     }

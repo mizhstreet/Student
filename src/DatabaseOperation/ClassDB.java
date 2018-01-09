@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -63,7 +64,9 @@ public class ClassDB {
             while(rs.next()){
                 id = rs.getInt(1);
             }
+            JOptionPane.showMessageDialog(null, "Class Inserted Succesfully!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Class Inserted Failed!");
             Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return id;
@@ -76,7 +79,9 @@ public class ClassDB {
         try {
             pstmt = conn.prepareStatement(query);
             pstmt.execute();
+            JOptionPane.showMessageDialog(null, "Class Updated Succesfully!");
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Class Updated Failed!");
             Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -104,6 +109,7 @@ public class ClassDB {
             pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Cannot get Class!");
             Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return rs;

@@ -8,17 +8,15 @@ package UI.Exam;
 import Classes.Exam;
 import Classes.ExamResult;
 import Classes.Student;
-import DatabaseOperation.AttendanceDB;
 import DatabaseOperation.ExamDB;
 import DatabaseOperation.StudentDB;
-import OtherComponents.AttendanceTableModel;
-import OtherComponents.RollUpStatus;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -37,6 +35,7 @@ public class MarkFrame extends javax.swing.JFrame {
     public MarkFrame(Exam atd, boolean isMarked) {
         this.atd = atd;
         initComponents();
+        this.setDefaultCloseOperation(MarkFrame.DISPOSE_ON_CLOSE);
         StudentDB sdb = new StudentDB();       
         Classes.Class c = new Classes.Class();
         c.setClassID(atd.getClass_id());
@@ -201,6 +200,7 @@ public class MarkFrame extends javax.swing.JFrame {
     private void txtFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFinishActionPerformed
         new ExamDB().deleteMark(atd);
         insertToExamResult();
+        
     }//GEN-LAST:event_txtFinishActionPerformed
 
     /**
@@ -251,10 +251,16 @@ public class MarkFrame extends javax.swing.JFrame {
     public void insertToExamResult(){
         ArrayList<ExamResult> listExamResult = new ArrayList<>();
         int rowCount = tblAttend.getRowCount();
+        boolean err = false;
         for (int i = 0; i < rowCount; i++) {           
             ExamResult er = new ExamResult();
             if("".equals(tblAttend.getValueAt(i, 4)+"")){
                 er.setMark(-1);
+            }
+            else if(Integer.parseInt(tblAttend.getValueAt(i, 4).toString()) <= 0 || 
+                    Integer.parseInt(tblAttend.getValueAt(i, 4).toString()) > atd.getTotalmark()){     
+                err = true;  
+                break;
             }
             else {
                 er.setMark(Integer.parseInt(tblAttend.getValueAt(i, 4).toString()));
@@ -264,6 +270,10 @@ public class MarkFrame extends javax.swing.JFrame {
             er.setRemark(tblAttend.getValueAt(i, 5).toString());
             listExamResult.add(er);
         }
-        new ExamDB().insertMark(listExamResult);
+        if(err == false){
+            new ExamDB().insertMark(listExamResult);
+        }else{
+            JOptionPane.showMessageDialog(null, "Wrong Mark! Please Check again!");
+        }
     }
 }
