@@ -7,11 +7,13 @@ package DatabaseOperation;
 
 import Classes.Attendance;
 import Classes.Student;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,6 +25,7 @@ import javax.swing.JOptionPane;
 public class AttendanceDB {
     Connection conn;
     PreparedStatement pstmt;
+    CallableStatement cstmt;
     ResultSet rs;
     public AttendanceDB() {
         conn = DBUtility.openConnection();
@@ -47,38 +50,74 @@ public class AttendanceDB {
         }
         return id;
     }
-    public void editStudentAttendance(Student dummyStudent){
-        String sql = "Update Attendance set attendant=";
-    }
     public ResultSet checkIfExisted(String className, String sessionName){
-        String sql = "Select attend_id from attendance a inner join Class c on a.class_id = c.class_id inner join "
-                + "subject_sessions s on a.session_id = s.session_id "
-                + "where c.name ='"+className+"' and s.name ='"+sessionName+"'";
         try {
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
+            cstmt = conn.prepareCall("{call checkAttendanceSession (?,?)}");
+            cstmt.setString(1, className);
+            cstmt.setString(2, sessionName);
+            rs = cstmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AttendanceDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return rs;
     }
-    public void rollUpStudent(String sql){
+    public void rollUpStudent(ArrayList<Student> listStudent, Attendance atd){    
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.execute();
+            Statement stmt = conn.createStatement();
+            for (Student s : listStudent) {
+                int type = 0;
+                switch (s.getRollUpStatus().toString()) {
+                case "P":
+                    type = 1;
+                    break;
+                case "PA":
+                    type =2;
+                    break;
+                case "A":
+                    type =0;
+                    break;
+                default:
+                    break;
+                }
+                String sql = "Insert into Attendance_Student values("+atd.getAttendID()+","
+                        +s.getStudentId()+","+type+")";
+                stmt.addBatch(sql);                
+            }
+            stmt.executeBatch();
             JOptionPane.showMessageDialog(null, "Rolled Up Succesfully!");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Rolled Up Failed!");
             Logger.getLogger(AttendanceDB.class.getName()).log(Level.SEVERE, null, ex);
-        }       
+        }
     }
-    public void deleteRolledStudent(Attendance dummyAttendance){
-        String sql = "Delete from Attendance_Student where attend_id="+dummyAttendance.getAttendID();
+    public void editRolledStudent(ArrayList<Student> listStudent, Attendance atd){
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.execute();
-                    } catch (SQLException ex) {
+            Statement stmt = conn.createStatement();
+            for (Student s : listStudent) {
+                int type = 0;
+                switch (s.getRollUpStatus().toString()) {
+                case "P":
+                    type = 1;
+                    break;
+                case "PA":
+                    type =2;
+                    break;
+                case "A":
+                    type =0;
+                    break;
+                default:
+                    break;
+                }
+                String sql = "Update Attendance_Student set attendstatus ="+type+" where "
+                        + "attend_id ="+atd.getAttendID()+" And student_id ="+s.getStudentId();
+                stmt.addBatch(sql);                
+            }
+            stmt.executeBatch();
+            JOptionPane.showMessageDialog(null, "Edited Succesfully!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Edited Failed!");
             Logger.getLogger(AttendanceDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 }

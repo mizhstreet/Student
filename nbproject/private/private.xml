@@ -5,10 +5,11 @@
         <group>
             <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Exam/ExamFrame.java</file>
             <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Main.java</file>
-            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Attendance/AttendanceFrame.java</file>
+            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Class/ClassFrame.java</file>
+            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Attendance/AttendanceOptions.java</file>
+            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/DatabaseOperation/SubjectSessionDB.java</file>
             <file>file:/home/mbiuu/Downloads/Student%20(1)/src/UI/Subject/SubjectFrame.java</file>
             <file>file:/home/mbiuu/Downloads/Student%20(1)/src/DatabaseOperation/ExamDB.java</file>
-            <file>file:/home/mbiuu/Downloads/Student%20(1)/src/DatabaseOperation/AttendanceDB.java</file>
         </group>
     </open-files>
 </project-private>

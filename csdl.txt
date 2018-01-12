@@ -57,4 +57,64 @@ Alter table Exam add totalmark int
 
 insert into Exam values('2017-12-12','Thi Java 1 li thuyet',1,40,1,20)
 
+create proc updateSubject
+@subjectID int,
+@name varchar(45),
+@semId int,
+@description text,
+@status bit
+as Update Subjects set name=@name, description=@description, status=@status, sem_id=@semId where subject_id=@subjectID 
+
+create proc getAllSubject as Select subject_id, Subjects.name, description, status, Semester.name as semname from Subjects inner join Semester on Subjects.sem_id = Semester.sem_id
+
+create proc getAllActiveSubject as Select subject_id, Subjects.name, description, status, Semester.name as semname from Subjects inner join Semester 
+on Subjects.sem_id = Semester.sem_id where Subjects.status = 1
+
+create proc getSubjectNameBySubjectID
+@name varchar(45) 
+as select * from Subjects where name = @name
+
+create proc getCountOfSubjects as select count(*) from Subjects
+
+create proc checkAttendanceSession 
+@className varchar(6),
+@sessionName varchar(100)
+as Select attend_id from attendance a inner join Class c on a.class_id = c.class_id inner join subject_sessions s on a.session_id = s.session_id where c.name =@className and s.name =@sessionName
+
+create proc editExam
+@examID int, 
+@examDate date,
+@name varchar(100),
+@subjectID int,
+@condition int,
+@totalmark int,
+@classID int
+as update Exam set exam_date = @examDate, name = @name, subject_id = @subjectID, condition = @condition,class_id = @classID, totalmark =@totalmark where exam_id=@examID
+
+create proc deleteExam 
+@examID int
+as delete from exam_result where exam_id=@examID 
+
+create proc getAllExamByClassID 
+@classID int
+as Select exam_id, s.name as subject_name, e.name, condition,totalmark, exam_date from exam e inner join Subjects s on e.subject_id = s.subject_id where class_id=@classID
+
+create proc getAllSubjectSession
+@subject_id int
+as select * from Subject_Sessions where subject_id=@subject_id
+
+create proc insertSubjectSession
+@subject_id int,
+@name varchar(100)
+as insert into Subject_Sessions values(@subject_id,@name)
+
+create proc editSubjectSession 
+@sessionID int,
+@subjectID int,
+@name varchar(100)
+as update Subject_Sessions set subject_id = @subjectID, name =@name where session_id=@sessionID
+
+
+
+
 

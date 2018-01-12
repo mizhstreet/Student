@@ -167,7 +167,7 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="222" max="32767" attributes="0"/>
+                              <EmptySpace pref="254" max="32767" attributes="0"/>
                               <Component id="txtDate" min="-2" pref="220" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
@@ -370,7 +370,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fe" green="4e" red="63" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Condition"/>
+                <Property name="text" type="java.lang.String" value="Condition(%)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtTotalMark">

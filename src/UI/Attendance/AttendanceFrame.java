@@ -31,7 +31,7 @@ public class AttendanceFrame extends javax.swing.JFrame {
     /**
      * Creates new form AttendanceFrame
      */
-    List<Student> listPerson = new ArrayList<>();
+    ArrayList<Student> listPerson = new ArrayList<>();
     private AttendanceTableModel tableModel;
     private Attendance atd;
 
@@ -218,13 +218,14 @@ public class AttendanceFrame extends javax.swing.JFrame {
     private void txtFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFinishActionPerformed
         // TODO add your handling code here:
         if(!atd.isMarked()){
-            atd.setMarked(true);
             int id = new AttendanceDB().rollUp(atd);
+            if(id > 0) atd.setMarked(true);
             atd.setAttendID(id);
             insertStudentToAttendance();
         }else {
-            new AttendanceDB().deleteRolledStudent(atd);
-            insertStudentToAttendance();
+//            new AttendanceDB().deleteRolledStudent(atd);
+//            insertStudentToAttendance();
+            editStudentAttendance();
         }
 
     }//GEN-LAST:event_txtFinishActionPerformed
@@ -273,31 +274,20 @@ public class AttendanceFrame extends javax.swing.JFrame {
     private javax.swing.JButton txtFinish;
     // End of variables declaration//GEN-END:variables
     public void insertStudentToAttendance(){
-        String sql = "Insert into Attendance_Student values";
-        int rowCount = tblAttend.getRowCount();
-        String text = tblAttend.getValueAt(0, 0)+"";       
+        int rowCount = tblAttend.getRowCount();   
         for (int i = 0; i < rowCount; i++) {
-            Student std = listPerson.get(i);
             String stt = tblAttend.getValueAt(i, 4)+"";           
-            byte type = 0;
-            switch (stt) {
-                case "P":
-                    type = 1;
-                    break;
-                case "PA":
-                    type =2;
-                    break;
-                case "A":
-                    type =0;
-                    break;
-                default:
-                    break;
-            }
-            String sqlPlus = "("+atd.getAttendID()+","+std.getStudentId()+","+type+"),";
-            sql+=sqlPlus;            
+            listPerson.get(i).setRollUpStatus(new RollUpStatus(stt));            
         }
-        String finalSQL = sql.substring(0, sql.length()-1);
-        new AttendanceDB().rollUpStudent(finalSQL);
+        new AttendanceDB().rollUpStudent(listPerson, atd);
+    }
+    public void editStudentAttendance(){
+        int rowCount = tblAttend.getRowCount();    
+        for (int i = 0; i < rowCount; i++) {
+            String stt = tblAttend.getValueAt(i, 4)+"";           
+            listPerson.get(i).setRollUpStatus(new RollUpStatus(stt));               
+        }
+        new AttendanceDB().editRolledStudent(listPerson, atd);
     }
 
 }

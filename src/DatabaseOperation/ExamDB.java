@@ -6,6 +6,7 @@
 package DatabaseOperation;
 import Classes.Exam;
 import Classes.ExamResult;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +23,7 @@ import javax.swing.JOptionPane;
 public class ExamDB {
     Connection conn;
     PreparedStatement pstmt;
+    CallableStatement cstmt;
     ResultSet rs;
 
     public ExamDB() {
@@ -55,29 +57,30 @@ public class ExamDB {
         return id;
     }
     public void editExam(Exam dummyExam){
-        String updateQuery ="update Exam set exam_date = '"
-                    +dummyExam.getExam_date()+"', name='"
-                    +dummyExam.getName()+"', subject_id = "
-                    +dummyExam.getSubject_id()+", condition = "
-                    +dummyExam.getCondition()+",class_id = "
-                    +dummyExam.getClass_id()+", totalmark ="
-                    +dummyExam.getTotalmark()+" where exam_id="+dummyExam.getExam_id();
         try {
-            pstmt = conn.prepareStatement(updateQuery);
-            pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Edited Successfully!");
+            cstmt = conn.prepareCall("{call editExam(?,?,?,?,?,?,?)}");
+            cstmt.setInt(1, dummyExam.getExam_id());
+            cstmt.setDate(2, dummyExam.getExam_date());
+            cstmt.setString(3, dummyExam.getName());
+            cstmt.setInt(4, dummyExam.getSubject_id());
+            cstmt.setInt(5, dummyExam.getCondition());
+            cstmt.setInt(6, dummyExam.getTotalmark());
+            cstmt.setInt(7, dummyExam.getClass_id());
+            int i = cstmt.executeUpdate();
+            if(i>0){
+                JOptionPane.showMessageDialog(null, "Edited Successfully!");
+            }
+            else JOptionPane.showMessageDialog(null, "Edited Failed!");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Edit Failed!");
             Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     public ResultSet getAllExamByClassID(int classID){
-        String sql = "Select exam_id, s.name as subject_name, e.name, condition,totalmark, exam_date "
-                + "from exam e inner join "
-                + "Subjects s on e.subject_id = s.subject_id where class_id="+classID;
         try {
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
+            cstmt = conn.prepareCall("{call getAllExamByClassID(?)}");
+            cstmt.setInt(1, classID);
+            rs = cstmt.executeQuery();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Cannot get all exams of this class!");
             Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
@@ -85,12 +88,12 @@ public class ExamDB {
         return rs;
     }
     public void deleteMark(Exam e){
-        String sql = "delete from exam_result where exam_id="+e.getExam_id();
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.executeUpdate();
+            cstmt = conn.prepareCall("{call deleteExam(?)}");
+            cstmt.setInt(1, e.getExam_id());
+            cstmt.executeUpdate();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Failed!");
+            JOptionPane.showMessageDialog(null, "Delete Failed!");
             Logger.getLogger(ExamDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -17,6 +17,7 @@ import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -30,11 +31,17 @@ public class AttendanceOptions extends javax.swing.JFrame {
     DefaultComboBoxModel<Classes.Class> cboClassModel;
     DefaultComboBoxModel<Subject> cboSubjectModel;
     DefaultComboBoxModel<SubjectSession> cboSubjectSessionModel;
+    ArrayList<Subject> listSubject;
+    ArrayList<SubjectSession> listSessions;
+    ArrayList<Classes.Class> listClass;
     /**
      * Creates new form AttendanceOptions
      */
     public AttendanceOptions() {
         initComponents();
+        listSubject = new ArrayList<>();
+        listClass = new ArrayList<>();
+        listSessions = new ArrayList<>();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         cboClassModel = new DefaultComboBoxModel<>();
@@ -191,8 +198,9 @@ public class AttendanceOptions extends javax.swing.JFrame {
 
         if (evt.getStateChange() == ItemEvent.SELECTED) {
           // Item was just selected
-            loadSessionForCombo(item.toString());
+            loadSessionForCombo(listSubject.get(cb.getSelectedIndex()).getSubject_id());
 //            System.out.println(item.toString());
+//            System.out.println(cb.getSelectedIndex());
         } else if (evt.getStateChange() == ItemEvent.DESELECTED) {
           // Item is no longer selected
         }
@@ -205,8 +213,8 @@ public class AttendanceOptions extends javax.swing.JFrame {
         String className = cboClass.getSelectedItem().toString();
         String sessionName = cboSession.getSelectedItem().toString();
         atd.setMarked(false);
-        atd.setClassID(new ClassDB().getClassIDByClassName(className));
-        atd.setSessionId(new SubjectSessionDB().getSessionIDBySessionName(sessionName));
+        atd.setClassID(listClass.get(cboClass.getSelectedIndex()).getClassID());
+        atd.setSessionId(listSessions.get(cboSession.getSelectedIndex()).getSessionId());
         ResultSet rs = adb.checkIfExisted(className, sessionName);
         try {
             while(rs.next()){
@@ -276,6 +284,7 @@ public class AttendanceOptions extends javax.swing.JFrame {
                 c.setClassID(rs.getInt("class_id"));
                 c.setName(rs.getString("name"));
                 cboClassModel.addElement(c);
+                listClass.add(c);
             }
         } catch (SQLException ex) {
             Logger.getLogger(AttendanceOptions.class.getName()).log(Level.SEVERE, null, ex);
@@ -291,26 +300,31 @@ public class AttendanceOptions extends javax.swing.JFrame {
                 Subject s = new Subject();
                 s.setSubject_id(rs.getInt("subject_id"));
                 s.setName(rs.getString("name"));
-                cboSubjectModel.addElement(s);
+                listSubject.add(s);
+                cboSubjectModel.addElement(s);              
             }
         } catch (SQLException ex) {
             Logger.getLogger(AttendanceOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void loadSessionForCombo(String subjectName){
+    private void loadSessionForCombo(int subjectID){
         ResultSet rs;
         SubjectSessionDB ssdb = new SubjectSessionDB();
         cboSubjectSessionModel.removeAllElements();      
-        rs = ssdb.getAllSubjectSessionByName(subjectName);
+        System.out.println(subjectID);
+        rs = ssdb.getAllSubjectSession(subjectID);
+        listSessions.clear();
         try {
             while(rs.next()){
                 SubjectSession ss = new SubjectSession();
                 ss.setName(rs.getString("name"));
                 ss.setSessionId(rs.getInt("session_id"));
                 cboSubjectSessionModel.addElement(ss);
+                listSessions.add(ss);
             }
         } catch (SQLException ex) {
             Logger.getLogger(AttendanceOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
 }

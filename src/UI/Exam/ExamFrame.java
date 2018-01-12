@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -43,6 +42,8 @@ public class ExamFrame extends javax.swing.JFrame {
     public ExamFrame() {
         initComponents();
         this.setDefaultCloseOperation(ExamFrame.DISPOSE_ON_CLOSE);
+        listSubject = new ArrayList<>();
+        listClass = new ArrayList<>();
         cboClassModel = new DefaultComboBoxModel<>();
         cboSubjectModel = new DefaultComboBoxModel<>();
         tableModel = new DefaultTableModel();
@@ -167,7 +168,7 @@ public class ExamFrame extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(99, 78, 254));
-        jLabel4.setText("Condition");
+        jLabel4.setText("Condition(%)");
 
         txtTotalMark.setBackground(new java.awt.Color(254, 254, 254));
         txtTotalMark.setFont(new java.awt.Font("Miriam Mono CLM", 1, 18)); // NOI18N
@@ -221,7 +222,7 @@ public class ExamFrame extends javax.swing.JFrame {
                         .addComponent(txtExamID, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 222, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
                         .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -429,6 +430,8 @@ public class ExamFrame extends javax.swing.JFrame {
         txtCondition.setText(TblExam.getValueAt(row, 4)+"");
         txtTotalMark.setText(TblExam.getValueAt(row, 3)+"");
         cboSubject.setSelectedItem(TblExam.getValueAt(row, 5)+"");
+        
+        jComboBox1.setEnabled(false);
     }//GEN-LAST:event_TblExamMouseClicked
 
     private void btnAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMouseClicked
@@ -437,11 +440,11 @@ public class ExamFrame extends javax.swing.JFrame {
         }
         else if(validateForm()){
             Exam e = new Exam();
-            e.setClass_id(new ClassDB().getClassIDByClassName(jComboBox1.getSelectedItem().toString()));
+            e.setClass_id(listClass.get(jComboBox1.getSelectedIndex()).getClassID());
             e.setCondition(Integer.parseInt(txtCondition.getText()));
             e.setTotalmark(Integer.parseInt(txtTotalMark.getText()));
             e.setName(txtExamName.getText());
-            e.setSubject_id(new SubjectDB().getSubjectNameBySubjectID(cboSubject.getSelectedItem().toString()));
+            e.setSubject_id(listSubject.get(cboSubject.getSelectedIndex()).getSubject_id());
             SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 e.setExam_date(new java.sql.Date(date.parse(txtDate.getText()).getTime()));
@@ -469,7 +472,8 @@ public class ExamFrame extends javax.swing.JFrame {
         txtDate.setText("");
         txtExamName.setText("");
         txtCondition.setText("");
-        txtTotalMark.setText("");        
+        txtTotalMark.setText("");    
+        jComboBox1.setEnabled(true);
     }//GEN-LAST:event_btnClearMouseClicked
 
     private void btnEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseClicked
@@ -479,11 +483,11 @@ public class ExamFrame extends javax.swing.JFrame {
         }else if(validateForm()){
             Exam e = new Exam();
             int row = TblExam.getSelectedRow();
-            e.setClass_id(new ClassDB().getClassIDByClassName(jComboBox1.getSelectedItem().toString()));
+            e.setClass_id(listClass.get(jComboBox1.getSelectedIndex()).getClassID());
             e.setCondition(Integer.parseInt(txtCondition.getText()));
             e.setTotalmark(Integer.parseInt(txtTotalMark.getText()));
             e.setName(txtExamName.getText());
-            e.setSubject_id(new SubjectDB().getSubjectNameBySubjectID(cboSubject.getSelectedItem().toString()));
+            e.setSubject_id(listSubject.get(cboSubject.getSelectedIndex()).getSubject_id());
             SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 e.setExam_date(new java.sql.Date(date.parse(txtDate.getText()).getTime()));
@@ -506,11 +510,11 @@ public class ExamFrame extends javax.swing.JFrame {
         if(btnEditDisabled == false){
             Exam e = new Exam();
             int row = TblExam.getSelectedRow();
-            e.setClass_id(new ClassDB().getClassIDByClassName(jComboBox1.getSelectedItem().toString()));
+            e.setClass_id(listClass.get(jComboBox1.getSelectedIndex()).getClassID());
             e.setCondition(Integer.parseInt(txtCondition.getText()));
             e.setTotalmark(Integer.parseInt(txtTotalMark.getText()));
             e.setName(txtExamName.getText());
-            e.setSubject_id(new SubjectDB().getSubjectNameBySubjectID(cboSubject.getSelectedItem().toString()));
+            e.setSubject_id(listSubject.get(cboSubject.getSelectedIndex()).getSubject_id());
             SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 e.setExam_date(new java.sql.Date(date.parse(txtDate.getText()).getTime()));
@@ -525,7 +529,6 @@ public class ExamFrame extends javax.swing.JFrame {
     private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser1PropertyChange
         // TODO add your handling code here:
         if ("date".equals(evt.getPropertyName())) {
-            //Get the selected date 
             Date date = jDateChooser1.getDateEditor().getDate();
             SimpleDateFormat print = new SimpleDateFormat("yyyy-MM-dd");
             txtDate.setText(print.format(date));
@@ -605,6 +608,7 @@ public class ExamFrame extends javax.swing.JFrame {
                 Classes.Class c = new Classes.Class();
                 c.setClassID(rs.getInt("class_id"));
                 c.setName(rs.getString("name"));
+                listClass.add(c);
                 cboClassModel.addElement(c);
             }
         } catch (SQLException ex) {
@@ -615,12 +619,13 @@ public class ExamFrame extends javax.swing.JFrame {
         ResultSet rs;
         SubjectDB subjectDB = new SubjectDB();
         cboSubjectModel.removeAllElements();
-        rs = subjectDB.getAllSubject();
+        rs = subjectDB.getAllActiveSubject();
         try {
             while(rs.next()){
                 Subject s = new Subject();
                 s.setSubject_id(rs.getInt("subject_id"));
                 s.setName(rs.getString("name"));
+                listSubject.add(s);
                 cboSubjectModel.addElement(s.getName());
             }
         } catch (SQLException ex) {
@@ -629,7 +634,8 @@ public class ExamFrame extends javax.swing.JFrame {
     }
     private void loadDataForTable(){
         ResultSet rs;
-        int classID = new ClassDB().getClassIDByClassName(jComboBox1.getSelectedItem()+"");
+        int selectedClass = jComboBox1.getSelectedIndex();
+        int classID = listClass.get(selectedClass).getClassID();
         rs = new ExamDB().getAllExamByClassID(classID);
         try {
             while(rs.next()){

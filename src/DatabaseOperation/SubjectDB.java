@@ -6,6 +6,7 @@
 package DatabaseOperation;
 
 import Classes.Subject;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import javax.swing.JOptionPane;
  */
 public class SubjectDB {
     Connection conn;
+    CallableStatement cstmt = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
@@ -29,31 +31,16 @@ public class SubjectDB {
     }
     public int getNumberOfSubject(){
         int i = 0;
-        String sql = "select * from Subjects where status = 1";
         try {
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
+            cstmt = conn.prepareCall("{call getCountOfSubjects}");
+            rs = cstmt.executeQuery();
             while(rs.next()){
-                i++;
+                i = rs.getInt(1);
             }
         } catch (SQLException ex) {
             Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return i;
-    }
-    public int getSubjectNameBySubjectID(String name){
-        int subjectID =0;
-        String sql = "select * from Subjects where name ='"+name+"'";
-        try {
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            while(rs.next()){
-                subjectID = rs.getInt("subject_id");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return subjectID;
     }
     public int insertSubject(Subject dummySubject){
         int id = 0;
@@ -79,28 +66,38 @@ public class SubjectDB {
         return id;
     }
     public ResultSet getAllSubject(){
-        String sql = "Select subject_id, Subjects.name, description, status, Semester.name as semname from Subjects inner join Semester on Subjects.sem_id = Semester.sem_id";
         try {
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
+            cstmt = conn.prepareCall("{call getAllSubject}");
+            rs = cstmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
+    public ResultSet getAllActiveSubject(){
+        try {
+            cstmt = conn.prepareCall("{call getAllActiveSubject}");
+            rs = cstmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return rs;
     }
     public void updateSubject(Subject dummySubject){
-        String query = "Update Subjects set name='"+dummySubject.getName()+"', "
-                + "description='"+dummySubject.getDescription()+"', "
-                + "status="+(dummySubject.isStatus() ? 1 : 0)+", "
-                + "sem_id="+dummySubject.getSemId()+" "
-                + "where subject_id="+dummySubject.getSubject_id();
         try {
-            pstmt = conn.prepareStatement(query);
-            pstmt.execute();
-            JOptionPane.showMessageDialog(null, "Edited Successfully!");
+            cstmt = conn.prepareCall("{call updateSubject (?,?,?,?,?)}");
+            cstmt.setInt(1, dummySubject.getSubject_id());
+            cstmt.setString(2, dummySubject.getName());
+            cstmt.setInt(3, dummySubject.getSemId()); 
+            cstmt.setInt(5, (dummySubject.isStatus() ? 1 : 0));
+            cstmt.setString(4, dummySubject.getDescription());                    
+            int i = cstmt.executeUpdate();
+            if(i>0){
+                JOptionPane.showMessageDialog(null, "Edited Successfully!");
+            }
+            else JOptionPane.showMessageDialog(null, "Edited Failed!");
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Edited Failed!");
-            Logger.getLogger(ClassDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SubjectDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
