@@ -1,16 +1,15 @@
-# Student
-Student Management JavaSwing Application!
-# Functionality
-- Manage Student 
-- Manage Class 
-- Manage Subject 
-- Manage Exam + Mark
-- Manage Attendance
+# 学校用の学生管理アプリ
+# 機能
+- 学生管理 
+- クラス管理
+- 科目管理
+- 試験、点数管理
+- 出席管理
 # Usage
-- Run csdl.txt in SQL Server
-- Open DBUtility.java, make sure you have right port and right ms sql username and password, edit it as yours!
-- Login with username: admin and password: admin.
-- Don't forget to give credit if you want to use my work!
+- SQL Serverでcsdl.txt実行（1行ずつ）
+- DBUtility.java を開いて、ポートとデータベースのユーザー名, パスワードを修正してください。
+- ユーザー名はadmin,パスワードはadmin、ログインしてください
+- 私のプロジェクトを使いたい場合はクレジットを挿入することを忘れないで下さい!
 # Screenshot
 ![Login](https://lh3.googleusercontent.com/fife/ABSRlIpQDcWs8prK0eKt9legRiRecLf-XAEG60GEq7u4rqCXltAh8FkQxi_OGW37voqfiBIDfQ7QH6NHlBvRIZtiOYAQ_khOxFwyAGJ8jpeB95Ew7PtNo51A8fSDeGL-GbQHg6GvvxnoMhoViVNpWxDzRxPi0ZoelzATZ85L7VRU4FJwTrcpntOYzvJqGb0uTNqbaWl2KoAER84PosTJuzVl43V8O7TmWk1KyYZxUN6m4-tZv7QjkfawMfj6FuHJle4nqgq_tAAuWTEqsn1eu0LiDKejoHksPU9ofthayfHWhfbe_oNeBc-Ktpr_WIpZ-LN255UPa3bm78abBRSPJBAN1poZIxdk8kpr5N0wTefEIT89wuFxs7eNSrxrTirJRe-limOkPs0H5Gbr5NaSxci80gLL7wBcYz7mbW8lV9c4hhUS4Wju_xAFtuLOPG0Rv57TtX7xwuCGLIP-z8SuUj8t5YbGuoLEtv4mz3LqQjtYwE0i-uBOmH2RqmZ1q9WqU7x755bwWUaY6SqSaResLdd0zT-uXw7AjKW_vhVufkn6R45m2wyUzjCm1f84rdcnPTNjRhu8FpAEBxwt8iwV4cfgtD_3k1akYEqLYdhqz9qHExF2axR7QENzpLVjZ0gXup0Mw18ZwkMfay5lLIrhzHhoKp8SWM8TfworYxBVfIMIHsnF3JxPFgoy2p8e7JQgkFKGmOzPLkcZuaTp67qbzlwlqtxTRWm7RWNoWTY=w1366-h625-ft)
 ![Login](https://lh3.googleusercontent.com/fife/ABSRlIrZhUHpIiCuCn4lQxIA55hfAwb7vsENyxo4YDsdq3s0gjIRTPQLb1NakRdUWasmIOtfE6HSyx610VMOIF17QgwuTAQl1jcj4ZyHD7L9CY_OyoSr6hS3kftRsYpA3okwO90bSiMHLduyHwpuMr_Pgie9s7x9ZjLbw1MJ8WomVqZwvoehempXJqiIverR9Cv0ZcPbjTcuDHJ0bp1WYmJSFy1wE77XX-8YU7TyHCI7gAMLfAM1ixcM-PpjYJ9XO5s6-OaCrjBmPpZ3QSavduWeVSaYNBnMEk7JYScAngHyjCJHdkwLHoTiPUCp0N2dlNnrMJ3ruppRKhck2dQdWsKSYF_ygmsWDRMIq1N7V35Vv3pTKs-bWfNE1r2PhsKiomfX2SVnrkvmvZU1GxQIfTwmqU01A7ncCVVNsWgy7EuupwwTke1zcZNHvafX8Q9J2IEIrGMNE8OuKvDEjnpW9AHV9bH_GTHBbAgU17kNecBQeLyjBrjhrx90QypOkNxi-9jVVwI23_eNamOJMpvLxa2AdsXNIU_YGYamSld-wn-D46RcCTpE8KDk3ZQVyph6Y9lOOBmI_IaYVvQkQ8xHawuTGFbmWHmBo1CLHr5Z94v4HDAQiQ-EmVG8OSa9Nyou-CwEJA19dRddyEMKI_U7OySbwwRrkNx91WCXRNWGbBV47tasqV83le6yb4ntNcfTdvfuMtH6sruO_NPizsC8qpd109OIH85in-52N9E=w2000-h3666-ft)
